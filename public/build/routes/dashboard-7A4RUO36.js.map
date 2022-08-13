@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard.tsx?browser", "../../../app/routes/dashboard.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { LoaderArgs, redirect } from \"@remix-run/node\";\nimport { Link, Outlet } from \"@remix-run/react\";\n\nexport async function loader({ request }: LoaderArgs) {\n    const { userId } = await getAuth(request);\n    if(!userId) {\n        redirect(\"/sign-up\");\n    }\n}\n\nexport default function DashboardRoute() {\n    return (\n        <main>\n            <div className=\"flex gap-8\">\n                <aside>\n                    <Link to=\"stats\">stadistics</Link>\n                    <br />\n                    <br />\n                    <Link to=\"products\">products</Link>\n                    <br />\n                    <br />\n                    <Link to=\"perfil\">perfil</Link>\n                </aside>\n                <section className=\"flex-1\">\n                    <Outlet />\n                </section>\n            </div>\n        </main>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;;;;;AAAA;;;ACAA;AAAA,iBAAwB;AAExB;AASe,0BAA0B;AACrC,SACI,oCAAC,QAAD,MACI,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACX,oCAAC,SAAD,MACI,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAQ,eACjB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW,aACpB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAS,YAEtB,oCAAC,WAAD;AAAA,IAAS,WAAU;AAAA,KACf,oCAAC,QAAD;AAAA;",
+  "names": []
+}
