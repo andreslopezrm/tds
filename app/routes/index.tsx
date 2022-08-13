@@ -18,6 +18,9 @@ export default function Index() {
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
      <h1>Datos</h1>
      <p>{data.name}</p>
+     <h1 className="text-3xl font-bold underline text-red-700">
+        Hello world!
+      </h1>
     </div>
   );
 }

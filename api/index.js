@@ -61,9 +61,19 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
 var root_exports = {};
 __export(root_exports, {
   default: () => App,
+  links: () => links,
   meta: () => meta
 });
-var import_react2 = require("@remix-run/react"), meta = () => ({
+var import_react2 = require("@remix-run/react");
+
+// app/styles/app.css
+var app_default = "/build/_assets/app-D3LCO7OO.css";
+
+// app/root.tsx
+function links() {
+  return [{ rel: "stylesheet", href: app_default }];
+}
+var meta = () => ({
   charset: "utf-8",
   title: "New Remix App",
   viewport: "width=device-width,initial-scale=1"
@@ -111,11 +121,13 @@ function Index() {
   let data = (0, import_react3.useLoaderData)();
   return console.log(data), /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
-  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement("p", null, data.name));
+  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement("p", null, data.name), /* @__PURE__ */ React.createElement("h1", {
+    className: "text-3xl font-bold underline text-red-700"
+  }, "Hello world!"));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "d2fdcf5e", entry: { module: "/build/entry.client-OQHRAVFZ.js", imports: ["/build/_shared/chunk-CZPSQZ3L.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-EDXM3LM4.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SZORMOA5.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-D2FDCF5E.js" };
+var assets_manifest_default = { version: "e96d0002", entry: { module: "/build/entry.client-OQHRAVFZ.js", imports: ["/build/_shared/chunk-CZPSQZ3L.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-DXO5G6H2.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-WBHNU5RK.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-E96D0002.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
