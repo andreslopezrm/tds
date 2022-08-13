@@ -69,7 +69,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_ssr = require("@clerk/remix/ssr.server"), import_remix = require("@clerk/remix"), import_remix2 = require("@clerk/remix");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-D3LCO7OO.css";
+var app_default = "/build/_assets/app-HGZ4R6HZ.css";
 
 // app/root.tsx
 function links() {
@@ -87,13 +87,94 @@ function App() {
 }
 var root_default = (0, import_remix.ClerkApp)(App);
 
+// app/routes/dashboard.tsx
+var dashboard_exports = {};
+__export(dashboard_exports, {
+  default: () => DashboardRoute
+});
+var import_react3 = require("@remix-run/react");
+function DashboardRoute() {
+  return /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h1", null, "Dashboard"), /* @__PURE__ */ React.createElement("div", {
+    className: "flex gap-8"
+  }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(import_react3.Link, {
+    to: "stats"
+  }, "stadistics"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react3.Link, {
+    to: "products"
+  }, "products"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react3.Link, {
+    to: "perfil"
+  }, "perfil")), /* @__PURE__ */ React.createElement("div", {
+    className: "flex-1"
+  }, /* @__PURE__ */ React.createElement(import_react3.Outlet, null))));
+}
+
+// app/routes/dashboard/products.tsx
+var products_exports = {};
+__export(products_exports, {
+  default: () => Dashboard,
+  loader: () => loader2
+});
+var import_node2 = require("@remix-run/node"), import_react4 = require("@remix-run/react");
+
+// app/utils/params.server.ts
+function getQueryIntParameter(request, name, defaultValue) {
+  let url2 = new URL(request.url), param = parseInt(url2.searchParams.get(name) ?? "", 10);
+  return isNaN(param) ? defaultValue : param;
+}
+
+// app/routes/dashboard/products.tsx
+function loader2({ request }) {
+  let offset = getQueryIntParameter(request, "offset", 0);
+  return (0, import_node2.json)({ offset });
+}
+function Dashboard() {
+  let { offset } = (0, import_react4.useLoaderData)();
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h1", null, "products dash"), /* @__PURE__ */ React.createElement("p", null, "Offset: ", offset), /* @__PURE__ */ React.createElement(import_react4.Link, {
+    to: "/dashboard/products?offset=2"
+  }, "Next"));
+}
+
+// app/routes/dashboard/index.tsx
+var dashboard_exports2 = {};
+__export(dashboard_exports2, {
+  default: () => Dashboard2
+});
+function Dashboard2() {
+  return /* @__PURE__ */ React.createElement("h1", null, "index dash");
+}
+
+// app/routes/sign-in/$.tsx
+var __exports = {};
+__export(__exports, {
+  default: () => SignInRoute
+});
+var import_remix3 = require("@clerk/remix");
+function SignInRoute() {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(import_remix3.SignIn, {
+    routing: "path",
+    path: "/sign-in"
+  }));
+}
+
+// app/routes/sign-up/$.tsx
+var __exports2 = {};
+__export(__exports2, {
+  default: () => SignUpRoute
+});
+var import_remix4 = require("@clerk/remix");
+function SignUpRoute() {
+  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(import_remix4.SignUp, {
+    routing: "path",
+    path: "/sign-up"
+  }));
+}
+
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Index,
-  loader: () => loader2
+  loader: () => loader3
 });
-var import_react3 = require("@remix-run/react");
+var import_react5 = require("@remix-run/react");
 
 // app/utils/db.server.ts
 var import_redis_om = require("redis-om"), url = "redis://default:IGR4niFMT9eR0LXMPu7rG0iRSSVg0XZ3@redis-15245.c273.us-east-1-2.ec2.cloud.redislabs.com:15245", client = new import_redis_om.Client(), Person = class extends import_redis_om.Entity {
@@ -115,13 +196,13 @@ var searchScore = async () => {
 };
 
 // app/routes/index.tsx
-var loader2 = async () => {
+var loader3 = async () => {
   await deleteScore();
   let data = await searchScore();
   return { name: "4", data };
 };
 function Index() {
-  let data = (0, import_react3.useLoaderData)();
+  let data = (0, import_react5.useLoaderData)();
   return console.log(data), /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
   }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement("p", null, data.name), /* @__PURE__ */ React.createElement("h1", {
@@ -130,7 +211,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "88626e25", entry: { module: "/build/entry.client-CM6RY7M3.js", imports: ["/build/_shared/chunk-VYFZBSOF.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-N3B6V6OB.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-7IJFFRKB.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-88626E25.js" };
+var assets_manifest_default = { version: "1648e348", entry: { module: "/build/entry.client-4PNEDKIQ.js", imports: ["/build/_shared/chunk-6WBNZMUB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-5U3NRMO3.js", imports: ["/build/_shared/chunk-732KBAAV.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-T7YHYU2B.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-4IVAIGCW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/products": { id: "routes/dashboard/products", parentId: "routes/dashboard", path: "products", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/products-O7NE52ND.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-EJSOHMA3.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-4YCY7J3N.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-CPQ5US6K.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-1648E348.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
@@ -141,6 +222,46 @@ var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { mod
     index: void 0,
     caseSensitive: void 0,
     module: root_exports
+  },
+  "routes/dashboard": {
+    id: "routes/dashboard",
+    parentId: "root",
+    path: "dashboard",
+    index: void 0,
+    caseSensitive: void 0,
+    module: dashboard_exports
+  },
+  "routes/dashboard/products": {
+    id: "routes/dashboard/products",
+    parentId: "routes/dashboard",
+    path: "products",
+    index: void 0,
+    caseSensitive: void 0,
+    module: products_exports
+  },
+  "routes/dashboard/index": {
+    id: "routes/dashboard/index",
+    parentId: "routes/dashboard",
+    path: void 0,
+    index: !0,
+    caseSensitive: void 0,
+    module: dashboard_exports2
+  },
+  "routes/sign-in/$": {
+    id: "routes/sign-in/$",
+    parentId: "root",
+    path: "sign-in/*",
+    index: void 0,
+    caseSensitive: void 0,
+    module: __exports
+  },
+  "routes/sign-up/$": {
+    id: "routes/sign-up/$",
+    parentId: "root",
+    path: "sign-up/*",
+    index: void 0,
+    caseSensitive: void 0,
+    module: __exports2
   },
   "routes/index": {
     id: "routes/index",

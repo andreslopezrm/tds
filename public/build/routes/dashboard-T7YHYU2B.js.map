@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard.tsx?browser", "../../../app/routes/dashboard.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard.tsx\";", "import { Link, Outlet } from \"@remix-run/react\";\n\nexport default function DashboardRoute() {\n    return (\n        <main>\n            <h1>Dashboard</h1>\n            <div className=\"flex gap-8\">\n                <div>\n                    <Link to=\"stats\">stadistics</Link>\n                    <br />\n                    <br />\n                    <Link to=\"products\">products</Link>\n                    <br />\n                    <br />\n                    <Link to=\"perfil\">perfil</Link>\n                </div>\n                <div className=\"flex-1\">\n                    <Outlet />\n                </div>\n            </div>\n        </main>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;AAAA;;;ACAA;AAAA;AAEe,0BAA0B;AACrC,SACI,oCAAC,QAAD,MACI,oCAAC,MAAD,MAAI,cACJ,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACX,oCAAC,OAAD,MACI,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAQ,eACjB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW,aACpB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAS,YAEtB,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACX,oCAAC,QAAD;AAAA;",
+  "names": []
+}

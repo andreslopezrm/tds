@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/utils/params.server", "browser-route-module:routes/dashboard/products.tsx?browser", "../../../../app/routes/dashboard/products.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/dashboard/products.tsx\";", "import { json, LoaderArgs } from \"@remix-run/node\";\nimport { Link, useLoaderData } from \"@remix-run/react\";\nimport { getQueryIntParameter } from \"~/utils/params.server\";\n\n\nexport function loader({ request }: LoaderArgs) {\n    const offset = getQueryIntParameter(request, 'offset', 0);\n\n    return json({ offset });\n}\n\nexport default function Dashboard(){\n    const { } = useLoaderData<typeof loader>();\n\n    return (\n        <div>\n            <h1>products dash</h1>\n            <Link to=\"/dashboard/products?offset=2\">Next</Link>\n        </div>\n    )\n}"],
+  "mappings": ";;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AACA;AACA,oBAAqC;AAStB,qBAAoB;AAC/B,QAAM,KAAM;AAEZ,SACI,oCAAC,OAAD,MACI,oCAAC,MAAD,MAAI,kBACJ,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAA+B;AAAA;",
+  "names": []
+}

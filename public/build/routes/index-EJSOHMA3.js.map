@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/utils/db.server", "browser-route-module:routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/index.tsx\";", "import { LoaderFunction } from \"@remix-run/node\";\nimport { useLoaderData } from \"@remix-run/react\";\nimport { deleteScore, searchScore } from \"~/utils/db.server\";\n\n\nexport const loader: LoaderFunction = async () => {\n  await deleteScore();\n  const data = await searchScore();\n\n\n  return { name: \"4\", data }\n}\n\nexport default function Index() {\n  const data = useLoaderData<typeof loader>();\n  console.log(data);\n  return (\n    <div style={{ fontFamily: \"system-ui, sans-serif\", lineHeight: \"1.4\" }}>\n     <h1>Datos</h1>\n     <p>{data.name}</p>\n     <h1 className=\"text-3xl font-bold underline text-red-700\">\n        Hello world!\n      </h1>\n    </div>\n  );\n}\n"],
+  "mappings": ";;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AACA;AACA,gBAAyC;AAW1B,iBAAiB;AAC9B,QAAM,OAAO;AACb,UAAQ,IAAI;AACZ,SACE,oCAAC,OAAD;AAAA,IAAK,OAAO,EAAE,YAAY,yBAAyB,YAAY;AAAA,KAC9D,oCAAC,MAAD,MAAI,UACJ,oCAAC,KAAD,MAAI,KAAK,OACT,oCAAC,MAAD;AAAA,IAAI,WAAU;AAAA,KAA4C;AAAA;",
+  "names": []
+}

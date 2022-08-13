@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/products.tsx?browser", "../../../../app/routes/dashboard/products.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/products.tsx\";", "import { Link } from \"@remix-run/react\";\n\nexport default function Dashboard(){\n    return (\n        <div>\n            <h1>products dash</h1>\n            <Link to=\"/dashboard/products?offset=2\">Next</Link>\n        </div>\n    )\n}"],
+  "mappings": ";;;;;;;;;;AAAA;;;ACAA;AAAA;AAEe,qBAAoB;AAC/B,SACI,oCAAC,OAAD,MACI,oCAAC,MAAD,MAAI,kBACJ,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAA+B;AAAA;",
+  "names": []
+}

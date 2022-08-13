@@ -555,14 +555,6 @@ video {
   display: flex;
 }
 
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.gap-8 {
-  gap: 2rem;
-}
-
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
