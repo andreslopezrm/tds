@@ -94,15 +94,15 @@ __export(dashboard_exports, {
 });
 var import_react3 = require("@remix-run/react");
 function DashboardRoute() {
-  return /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("h1", null, "Dashboard"), /* @__PURE__ */ React.createElement("div", {
+  return /* @__PURE__ */ React.createElement("main", null, /* @__PURE__ */ React.createElement("div", {
     className: "flex gap-8"
-  }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(import_react3.Link, {
+  }, /* @__PURE__ */ React.createElement("aside", null, /* @__PURE__ */ React.createElement(import_react3.Link, {
     to: "stats"
   }, "stadistics"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react3.Link, {
     to: "products"
   }, "products"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react3.Link, {
     to: "perfil"
-  }, "perfil")), /* @__PURE__ */ React.createElement("div", {
+  }, "perfil")), /* @__PURE__ */ React.createElement("section", {
     className: "flex-1"
   }, /* @__PURE__ */ React.createElement(import_react3.Outlet, null))));
 }
@@ -117,7 +117,7 @@ var import_node2 = require("@remix-run/node"), import_react4 = require("@remix-r
 
 // app/utils/params.server.ts
 function getQueryIntParameter(request, name, defaultValue) {
-  let url = new URL(request.url), param = parseInt(url.searchParams.get(name) ?? "", 10);
+  let url2 = new URL(request.url), param = parseInt(url2.searchParams.get(name) ?? "", 10);
   return isNaN(param) ? defaultValue : param;
 }
 
@@ -175,11 +175,43 @@ function SignUpRoute() {
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
-  default: () => IndexRoute
+  default: () => IndexRoute,
+  loader: () => loader3
 });
-var import_react5 = require("@remix-run/react");
+var import_ssr2 = require("@clerk/remix/ssr.server"), import_react5 = require("@remix-run/react");
+
+// app/db/person.server.ts
+var import_redis_om2 = require("redis-om");
+
+// app/db/redis.server.ts
+var import_redis_om = require("redis-om"), url = "redis://default:IGR4niFMT9eR0LXMPu7rG0iRSSVg0XZ3@redis-15245.c273.us-east-1-2.ec2.cloud.redislabs.com:15245", redisClient = new import_redis_om.Client(), redisConnect = async () => {
+  redisClient.isOpen() || await redisClient.open(url);
+};
+
+// app/db/person.server.ts
+var Person = class extends import_redis_om2.Entity {
+}, personSchema = new import_redis_om2.Schema(Person, {
+  firstName: { type: "string" },
+  lastName: { type: "string" }
+});
+async function createIndex() {
+  await redisConnect(), await redisClient.fetchRepository(personSchema).createIndex(), await redisClient.close();
+}
+async function getAllPeople() {
+  await redisConnect();
+  let repository = redisClient.fetchRepository(personSchema), offset = 0, count = 200;
+  return await repository.search().return.page(offset, count);
+}
+createIndex();
+
+// app/routes/index.tsx
+async function loader3({ request }) {
+  let { userId } = await (0, import_ssr2.getAuth)(request), people = await getAllPeople();
+  return console.log(people), { people };
+}
 function IndexRoute() {
-  return /* @__PURE__ */ React.createElement("div", {
+  let data = (0, import_react5.useLoaderData)();
+  return console.log(data), /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
   }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react5.Link, {
     to: "/sign-in"
@@ -189,7 +221,7 @@ function IndexRoute() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "0b7d81a0", entry: { module: "/build/entry.client-4PNEDKIQ.js", imports: ["/build/_shared/chunk-6WBNZMUB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-GZDJZJYK.js", imports: ["/build/_shared/chunk-732KBAAV.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-T7YHYU2B.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-RSXFDYXY.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/products": { id: "routes/dashboard/products", parentId: "routes/dashboard", path: "products", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/products-O7NE52ND.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-JNSJQGJ7.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-K652UXX6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-5KL3DKHJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-0B7D81A0.js" };
+var assets_manifest_default = { version: "c488417c", entry: { module: "/build/entry.client-4PNEDKIQ.js", imports: ["/build/_shared/chunk-6WBNZMUB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-L7ZBUZYW.js", imports: ["/build/_shared/chunk-732KBAAV.js", "/build/_shared/chunk-TNUSZ5ZZ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-X3CZP3T7.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-RSXFDYXY.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/products": { id: "routes/dashboard/products", parentId: "routes/dashboard", path: "products", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/products-O7NE52ND.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SGBMB5J4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-K652UXX6.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-5KL3DKHJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-C488417C.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

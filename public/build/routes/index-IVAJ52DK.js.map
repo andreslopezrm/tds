@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/index.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { LoaderArgs } from \"@remix-run/node\";\nimport { Link } from \"@remix-run/react\";\n\nexport async function loader({ request }: LoaderArgs) {\n  const { userId } = await getAuth(request);\n  console.log(userId);\n  return {}\n}\n\nexport default function IndexRoute() {\n  \n  return (\n    <div style={{ fontFamily: \"system-ui, sans-serif\", lineHeight: \"1.4\" }}>\n     <h1>Datos</h1>\n\n      <Link to=\"/sign-in\">Sign In</Link>\n      <br />\n      <br />\n      <Link to=\"/sign-up\">Sign Up</Link>\n    </div>\n  );\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;AAAA;;;ACAA;AAAA,iBAAwB;AAExB;AAQe,sBAAsB;AAEnC,SACE,oCAAC,OAAD;AAAA,IAAK,OAAO,EAAE,YAAY,yBAAyB,YAAY;AAAA,KAC9D,oCAAC,MAAD,MAAI,UAEH,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW,YACpB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW;AAAA;",
+  "names": []
+}

@@ -3,9 +3,8 @@ import { Link, Outlet } from "@remix-run/react";
 export default function DashboardRoute() {
     return (
         <main>
-            <h1>Dashboard</h1>
             <div className="flex gap-8">
-                <div>
+                <aside>
                     <Link to="stats">stadistics</Link>
                     <br />
                     <br />
@@ -13,10 +12,10 @@ export default function DashboardRoute() {
                     <br />
                     <br />
                     <Link to="perfil">perfil</Link>
-                </div>
-                <div className="flex-1">
+                </aside>
+                <section className="flex-1">
                     <Outlet />
-                </div>
+                </section>
             </div>
         </main>
     );
