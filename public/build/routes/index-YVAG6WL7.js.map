@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/db/product.server", "browser-route-module:routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/index.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { LoaderArgs, redirect } from \"@remix-run/node\";\nimport { Link, useLoaderData } from \"@remix-run/react\";\nimport { getAllProductsByUser } from \"~/db/product.server\";\n\nexport async function loader({ request }: LoaderArgs) {\n  const { userId } = await getAuth(request);\n\n  if(userId) {\n    return redirect(\"/dashboard\");\n  }\n  const todos = await getAllProductsByUser(\"kal\");\n  \n  return null;\n}\n\nexport default function IndexRoute() {\n  \n  return (\n    <div style={{ fontFamily: \"system-ui, sans-serif\", lineHeight: \"1.4\" }}>\n     <h1>Datos</h1>\n\n      <Link to=\"/sign-in\">Sign In</Link>\n      <br />\n      <br />\n      <Link to=\"/sign-up\">Sign Up</Link>\n    </div>\n  );\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AAAA,iBAAwB;AAExB;AACA,qBAAqC;AAatB,sBAAsB;AAEnC,SACE,oCAAC,OAAD;AAAA,IAAK,OAAO,EAAE,YAAY,yBAAyB,YAAY;AAAA,KAC9D,oCAAC,MAAD,MAAI,UAEH,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW,YACpB,oCAAC,MAAD,OACA,oCAAC,MAAD,OACA,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAW;AAAA;",
+  "names": []
+}

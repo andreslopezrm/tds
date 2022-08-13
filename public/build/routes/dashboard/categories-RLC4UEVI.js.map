@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/categories.tsx?browser", "../../../../app/routes/dashboard/categories.tsx", "../../../../app/components/dash-header.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/categories.tsx\";", "import DashHeader from \"~/components/dash-header\";\n\nexport default function DashboardCategoryRoute() {\n    return (\n        <div>\n            <DashHeader title=\"Categories\" />\n        </div>\n    );\n}", "type Props = {\n    title: string\n};\n\nexport default function DashHeader({ title } : Props) {\n    return (\n        <section>\n            <h1>{title}</h1>\n            <button>Logout</button>\n        </section>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;;;ACAA;AAIe,oBAAoB,EAAE,SAAiB;AAClD,SACI,oCAAC,WAAD,MACI,oCAAC,MAAD,MAAK,QACL,oCAAC,UAAD,MAAQ;AAAA;;;ADNL,kCAAkC;AAC7C,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

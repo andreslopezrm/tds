@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/perfil.tsx?browser", "../../../../app/routes/dashboard/perfil.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/perfil.tsx\";", "export default function DashboardPerfilRoute() {\n    return (\n        <h1>Perfil</h1>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,gCAAgC;AAC3C,SACI,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

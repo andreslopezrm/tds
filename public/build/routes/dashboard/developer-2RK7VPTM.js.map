@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/developer.tsx?browser", "../../../../app/routes/dashboard/developer.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/developer.tsx\";", "export default function DashboardDeveloperRoute() {\n    return (\n        <h1>DEvelper</h1>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,mCAAmC;AAC9C,SACI,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

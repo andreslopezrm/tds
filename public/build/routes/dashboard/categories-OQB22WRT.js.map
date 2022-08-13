@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/categories.tsx?browser", "../../../../app/routes/dashboard/categories.tsx", "../../../../app/components/dash-header.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/categories.tsx\";", "import DashHeader from \"~/components/dash-header\";\n\nexport default function DashboardCategoryRoute() {\n    return (\n        <div>\n            <DashHeader title=\"Categories\" />\n        </div>\n    );\n}", "type Props = {\n    title: string\n};\n\nexport default function DashHeader({ title } : Props) {\n    return (\n        <section className=\"flex justify-between\">\n            <h1 className=\"text-2xl font-extrabold md:text-3xl\">{title}</h1>\n            <button className=\"hidden md:block\">Logout</button>\n        </section>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;;;ACAA;AAIe,oBAAoB,EAAE,SAAiB;AAClD,SACI,oCAAC,WAAD;AAAA,IAAS,WAAU;AAAA,KACf,oCAAC,MAAD;AAAA,IAAI,WAAU;AAAA,KAAuC,QACrD,oCAAC,UAAD;AAAA,IAAQ,WAAU;AAAA,KAAkB;AAAA;;;ADNjC,kCAAkC;AAC7C,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

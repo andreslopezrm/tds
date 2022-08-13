@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/stats.tsx?browser", "../../../../app/routes/dashboard/stats.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/stats.tsx\";", "export default function StatsRoute() {\n    return (\n        <h1>Stats</h1>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,sBAAsB;AACjC,SACI,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

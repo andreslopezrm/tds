@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/categories.tsx?browser", "../../../../app/routes/dashboard/categories.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/categories.tsx\";", "export default function DashboardCategoryRoute() {\n    return (\n        <h1>cat</h1>\n    );\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,kCAAkC;AAC7C,SACI,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

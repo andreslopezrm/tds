@@ -1,6 +1,7 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { json, LoaderArgs, redirect } from "@remix-run/node";
-import { Link, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
+import DashNavbar from "~/components/dash-navbar";
 import { checkUser } from "~/db/user.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -18,17 +19,9 @@ export async function loader({ request }: LoaderArgs) {
 export default function DashboardRoute() {
     return (
         <main>
-            <div className="flex gap-8">
-                <aside>
-                    <Link to="stats">stadistics</Link>
-                    <br />
-                    <br />
-                    <Link to="products">products</Link>
-                    <br />
-                    <br />
-                    <Link to="perfil">perfil</Link>
-                </aside>
-                <section className="flex-1">
+            <div className="flex min-h-screen">
+                <DashNavbar />
+                <section className="flex-1 px-4 py-4 md:px-6">
                     <Outlet />
                 </section>
             </div>

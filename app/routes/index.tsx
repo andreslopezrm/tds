@@ -1,6 +1,6 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { LoaderArgs, redirect } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 
 export async function loader({ request }: LoaderArgs) {
   const { userId } = await getAuth(request);
@@ -8,7 +8,7 @@ export async function loader({ request }: LoaderArgs) {
   if(userId) {
     return redirect("/dashboard");
   }
-
+  
   return null;
 }
 
