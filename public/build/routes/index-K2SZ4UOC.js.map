@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/index.tsx\";", "import { LoaderFunction } from \"@remix-run/node\";\nimport { useLoaderData } from \"@remix-run/react\";\n\nexport const loader: LoaderFunction = () => {\n  return { name: \"uno\" }\n}\n\nexport default function Index() {\n  const data = useLoaderData<typeof loader>();\n  return (\n    <div style={{ fontFamily: \"system-ui, sans-serif\", lineHeight: \"1.4\" }}>\n     <h1>Datos</h1>\n    </div>\n  );\n}\n"],
+  "mappings": ";;;;;;;AAAA;;;ACAA;AAOe,iBAAiB;AAC9B,QAAM,OAAO;AACb,SACE,oCAAC,OAAD;AAAA,IAAK,OAAO,EAAE,YAAY,yBAAyB,YAAY;AAAA,KAC9D,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}
