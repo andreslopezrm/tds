@@ -60,11 +60,13 @@ function handleRequest(request, responseStatusCode, responseHeaders, remixContex
 // app/root.tsx
 var root_exports = {};
 __export(root_exports, {
-  default: () => App,
+  CatchBoundary: () => CatchBoundary,
+  default: () => root_default,
   links: () => links,
+  loader: () => loader,
   meta: () => meta
 });
-var import_react2 = require("@remix-run/react");
+var import_react2 = require("@remix-run/react"), import_ssr = require("@clerk/remix/ssr.server"), import_remix = require("@clerk/remix"), import_remix2 = require("@clerk/remix");
 
 // app/styles/app.css
 var app_default = "/build/_assets/app-D3LCO7OO.css";
@@ -75,20 +77,21 @@ function links() {
 }
 var meta = () => ({
   charset: "utf-8",
-  title: "New Remix App",
+  title: "Tip Land",
   viewport: "width=device-width,initial-scale=1"
-});
+}), CatchBoundary = (0, import_remix2.ClerkCatchBoundary)(), loader = (args) => (0, import_ssr.rootAuthLoader)(args);
 function App() {
   return /* @__PURE__ */ React.createElement("html", {
     lang: "en"
   }, /* @__PURE__ */ React.createElement("head", null, /* @__PURE__ */ React.createElement(import_react2.Meta, null), /* @__PURE__ */ React.createElement(import_react2.Links, null)), /* @__PURE__ */ React.createElement("body", null, /* @__PURE__ */ React.createElement(import_react2.Outlet, null), /* @__PURE__ */ React.createElement(import_react2.ScrollRestoration, null), /* @__PURE__ */ React.createElement(import_react2.Scripts, null), /* @__PURE__ */ React.createElement(import_react2.LiveReload, null)));
 }
+var root_default = (0, import_remix.ClerkApp)(App);
 
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   default: () => Index,
-  loader: () => loader
+  loader: () => loader2
 });
 var import_react3 = require("@remix-run/react");
 
@@ -112,7 +115,7 @@ var searchScore = async () => {
 };
 
 // app/routes/index.tsx
-var loader = async () => {
+var loader2 = async () => {
   await deleteScore();
   let data = await searchScore();
   return { name: "4", data };
@@ -127,7 +130,7 @@ function Index() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "e96d0002", entry: { module: "/build/entry.client-OQHRAVFZ.js", imports: ["/build/_shared/chunk-CZPSQZ3L.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-DXO5G6H2.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-WBHNU5RK.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-E96D0002.js" };
+var assets_manifest_default = { version: "88626e25", entry: { module: "/build/entry.client-CM6RY7M3.js", imports: ["/build/_shared/chunk-VYFZBSOF.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-N3B6V6OB.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-7IJFFRKB.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-88626E25.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
