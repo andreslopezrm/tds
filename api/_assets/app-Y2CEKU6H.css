@@ -573,13 +573,8 @@ video {
 
 /*** Overrides Libs ***/
 
-.auth .cl-formButtonPrimary, 
-.auth .cl-internal-b3fm6y {
+.sing-in .cl-formButtonPrimary {
   background: black;
-}
-
-.auth .cl-footerActionLink {
-  color: black;
 }
 
 @media (min-width: 768px) {

@@ -1,3 +1,14 @@
+/*** Tailwind ***/
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*** Overrides Libs ***/
+.auth .cl-formButtonPrimary, 
+.auth .cl-internal-b3fm6y {
+    background: black;
+}
+
+.auth .cl-footerActionLink {
+    color: black;
+}

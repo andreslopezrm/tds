@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/index.tsx?browser", "../../../../app/routes/dashboard/index.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/index.tsx\";", "export default function DashboardIndexRoute(){\n    return (\n        <h1>index dash</h1>\n    )\n}"],
+  "mappings": ";;;;;;AAAA;;;ACAA;AAAe,+BAA8B;AACzC,SACI,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

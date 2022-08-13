@@ -1,6 +1,6 @@
-/*** Tailwind ***/
-
-/*! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com*/
+/*
+! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com
+*/
 
 /*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -565,25 +565,4 @@ video {
 
 .gap-8 {
   gap: 2rem;
-}
-
-.p-2 {
-  padding: 0.5rem;
-}
-
-/*** Overrides Libs ***/
-
-.auth .cl-formButtonPrimary, 
-.auth .cl-internal-b3fm6y {
-  background: black;
-}
-
-.auth .cl-footerActionLink {
-  color: black;
-}
-
-@media (min-width: 768px) {
-  .md\:p-8 {
-    padding: 2rem;
-  }
 }
