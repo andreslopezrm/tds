@@ -27,6 +27,5 @@ export default function CategoryList({ categories }: Props) {
                 </tbody>
             </table>
         </div>
-
    );
 }

@@ -12,3 +12,11 @@
 .auth .cl-footerActionLink {
     color: black;
 }
+
+.auth-perfil .cl-card {
+    box-shadow: none;
+}
+
+.auth-perfil .cl-navbar {
+    border-right: none;
+}

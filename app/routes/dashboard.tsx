@@ -12,7 +12,6 @@ export async function loader({ request }: LoaderArgs) {
     }
 
     await checkUser(userId);
-    
     return json({ userId });
 }
 
