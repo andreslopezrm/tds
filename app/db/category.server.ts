@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import { Entity, Repository, Schema } from "redis-om";
 import { redisClient, redisConnect } from "./redis.server";
 
@@ -10,9 +11,11 @@ export interface Category {
 
 export class Category extends Entity {}
 
-export type CategoryCreate = Pick<Category, "userId" | "name" | "slug">
+export type CategoryCreate = Pick<Category, "userId" | "name">
 
-export type CategoryUpdate = Pick<Category, "entityId" | "name" | "slug">
+export type CategoryUpdate = Pick<Category, "entityId" | "name">
+
+export type CategorySearchSlug = Pick<Category, "userId" | "slug">
 
 export type CategorySearch = {
     userId: string;
@@ -35,8 +38,20 @@ async function getCategoryRepository(): Promise<Repository<Category>> {
     return repository;
 }
 
-export async function createCategory({ userId, name, slug } : CategoryCreate) : Promise<Category> {
+async function getCategorySlug({ userId, name } : CategoryCreate): Promise<string> {
+    const slug = slugify(name);
+    
+   const category = await getCategoryByUserAndSlug({ userId, slug });
+   if(category) {
+    return `${slug}-${+new Date()}`;
+   }
+
+   return slug;
+}
+
+export async function createCategory({ userId, name } : CategoryCreate) : Promise<Category> {
     const repository = await getCategoryRepository();
+    const slug = await getCategorySlug({ userId, name });
     return repository.createAndSave({ userId, name, slug, createAt: new Date() });
 }
 
@@ -74,7 +89,17 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
                 .first();
 }
 
-export async function updateCategory({ entityId, name, slug }: CategoryUpdate): Promise<string> {
+export async function getCategoryByUserAndSlug({ userId, slug }: CategorySearchSlug): Promise<Category | null> {
+    const repository = await getCategoryRepository();
+    return repository.search()
+                .where("slug")
+                .equals(slug)
+                .where("userId")
+                .equals(userId)
+                .first();
+}
+
+export async function updateCategory({ entityId, name }: CategoryUpdate): Promise<string> {
     const repository = await getCategoryRepository();
     const category = await getCategoryById(entityId);
     
@@ -82,7 +107,6 @@ export async function updateCategory({ entityId, name, slug }: CategoryUpdate): 
         throw new Error("Category not found");
     }
     category.name = name;
-    category.slug = slug;
     return repository.save(category);
 }
 
