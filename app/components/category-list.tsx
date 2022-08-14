@@ -2,10 +2,12 @@ import { Category } from "~/db/category.server"
 import CategoryItem from "./category-item";
 
 type Props = {
-    categories: Category[]
+    categories: Category[];
+    onSelect: (category: Category) => void;
+    onDelete: (entityId: string) => void;
 }
 
-export default function CategoryList({ categories }: Props) {
+export default function CategoryList({ categories, onSelect, onDelete }: Props) {
    return (
         <div className="overflow-x-auto relative mt-6">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -23,7 +25,7 @@ export default function CategoryList({ categories }: Props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {categories.map(category => <CategoryItem category={category} key={category.entityId} />)}
+                    {categories.map(category => <CategoryItem category={category} key={category.entityId} onSelect={onSelect} onDelete={onDelete} />)}
                 </tbody>
             </table>
         </div>

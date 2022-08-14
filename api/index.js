@@ -69,7 +69,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_ssr = require("@clerk/remix/ssr.server"), import_remix = require("@clerk/remix"), import_remix2 = require("@clerk/remix");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-6MN63NSW.css";
+var app_default = "/build/_assets/app-5OXNVXK6.css";
 
 // app/root.tsx
 function links() {
@@ -217,8 +217,21 @@ async function createCategory({ userId, name }) {
 async function getAllCategoriesByUser({ userId, offset = 0, perPage = 1 }) {
   return await (await getCategoryRepository()).search().where("userId").equals(userId).sortDescending("createAt").return.page(offset, perPage);
 }
+async function getCategoryById(entityId) {
+  return (await getCategoryRepository()).fetch(entityId);
+}
 async function getCategoryByUserAndSlug({ userId, slug }) {
   return (await getCategoryRepository()).search().where("slug").equals(slug).where("userId").equals(userId).first();
+}
+async function updateCategory({ entityId, userId, name }) {
+  let repository = await getCategoryRepository(), category = await getCategoryById(entityId);
+  if (!category)
+    throw new Error("Category not found");
+  let slug = await getCategorySlug({ userId, name });
+  return category.name = name, category.slug = slug, await repository.save(category), category;
+}
+async function deleteCategory(entityId) {
+  await (await getCategoryRepository()).remove(entityId);
 }
 
 // app/db/user.server.ts
@@ -267,11 +280,11 @@ __export(categories_exports, {
   default: () => DashboardCategoryRoute,
   loader: () => loader3
 });
-var import_ssr3 = require("@clerk/remix/ssr.server"), import_node3 = require("@remix-run/node"), import_react6 = require("@remix-run/react"), import_react7 = require("react");
+var import_ssr3 = require("@clerk/remix/ssr.server"), import_node3 = require("@remix-run/node"), import_react10 = require("@remix-run/react"), import_react11 = require("react");
 
 // app/components/category-item.tsx
-function CategoryItem({ category }) {
-  let { name, slug } = category;
+function CategoryItem({ category, onSelect, onDelete }) {
+  let { entityId, name, slug } = category;
   return /* @__PURE__ */ React.createElement("tr", {
     className: "bg-white border-b"
   }, /* @__PURE__ */ React.createElement("th", {
@@ -281,11 +294,15 @@ function CategoryItem({ category }) {
     className: "py-4 px-6"
   }, slug), /* @__PURE__ */ React.createElement("td", {
     className: "py-4 px-6"
-  }, "-"));
+  }, /* @__PURE__ */ React.createElement("button", {
+    onClick: () => onSelect(category)
+  }, "Edit"), /* @__PURE__ */ React.createElement("button", {
+    onClick: () => onDelete(entityId)
+  }, "Delete")));
 }
 
 // app/components/category-list.tsx
-function CategoryList({ categories }) {
+function CategoryList({ categories, onSelect, onDelete }) {
   return /* @__PURE__ */ React.createElement("div", {
     className: "overflow-x-auto relative mt-6"
   }, /* @__PURE__ */ React.createElement("table", {
@@ -303,27 +320,14 @@ function CategoryList({ categories }) {
     className: "py-3 px-6"
   }, "Actions"))), /* @__PURE__ */ React.createElement("tbody", null, categories.map((category) => /* @__PURE__ */ React.createElement(CategoryItem, {
     category,
-    key: category.entityId
+    key: category.entityId,
+    onSelect,
+    onDelete
   })))));
 }
 
-// app/components/dash-header.tsx
-var import_react5 = require("react"), import_remix3 = require("@clerk/remix");
-function DashHeader({ title }) {
-  let { signOut } = (0, import_remix3.useClerk)(), [isDisabled, setIsDisabled] = (0, import_react5.useState)(!1);
-  return /* @__PURE__ */ React.createElement("section", {
-    className: "flex justify-between"
-  }, /* @__PURE__ */ React.createElement("h1", {
-    className: "text-2xl font-extrabold md:text-3xl"
-  }, title), /* @__PURE__ */ React.createElement("button", {
-    disabled: isDisabled,
-    type: "button",
-    onClick: async () => {
-      setIsDisabled(!0), await signOut(), setIsDisabled(!1), window.location.href = "/";
-    },
-    className: "text-gray-900 hover:text-white border-2 border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hidden md:block disabled:opacity-50"
-  }, "Logout"));
-}
+// app/components/category-modal-create.tsx
+var import_react5 = require("@remix-run/react");
 
 // app/components/modal.tsx
 function Modal({ children, onClose }) {
@@ -348,44 +352,11 @@ function Modal({ children, onClose }) {
   }))), /* @__PURE__ */ React.createElement("div", null, children))));
 }
 
-// app/routes/dashboard/categories.tsx
-async function loader3({ request }) {
-  let { userId } = await (0, import_ssr3.getAuth)(request);
-  if (!userId)
-    return (0, import_node3.redirect)("/sign-up");
-  let categories = await getAllCategoriesByUser({ userId, perPage: 200 });
-  return (0, import_node3.json)({ categories, date: +new Date() });
-}
-async function action({ request }) {
-  let { userId } = await (0, import_ssr3.getAuth)(request);
-  if (!userId)
-    return (0, import_node3.redirect)("/sign-up");
-  let formData = await request.formData(), intent = formData.get("intent");
-  if (intent === "create") {
-    let name = formData.get("name");
-    if (!name)
-      return (0, import_node3.json)({ intent, errors: { name: "Name required " } });
-    let category = await createCategory({ userId, name });
-    return (0, import_node3.json)({ intent, category });
-  }
-  return (0, import_node3.json)({ intent });
-}
-function DashboardCategoryRoute() {
-  let { categories } = (0, import_react6.useLoaderData)(), data = (0, import_react6.useActionData)(), [showCreateModal, setShowCreateModal] = (0, import_react7.useState)(!1), handleOpenShowCreateModal = () => setShowCreateModal(!0), handleCloseShowCreateModal = () => setShowCreateModal(!1);
-  return (0, import_react7.useEffect)(() => {
-    (data == null ? void 0 : data.intent) === "create" && (data == null ? void 0 : data.category) && handleCloseShowCreateModal();
-  }, [data]), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
-    title: "Categories"
-  }), /* @__PURE__ */ React.createElement("div", {
-    className: "mt-4"
-  }, /* @__PURE__ */ React.createElement("button", {
-    type: "button",
-    onClick: handleOpenShowCreateModal
-  }, "New Category")), /* @__PURE__ */ React.createElement(CategoryList, {
-    categories
-  }), showCreateModal ? /* @__PURE__ */ React.createElement(Modal, {
-    onClose: handleCloseShowCreateModal
-  }, /* @__PURE__ */ React.createElement(import_react6.Form, {
+// app/components/category-modal-create.tsx
+function CategoryModalCreate({ isSubmiting, onClose }) {
+  return /* @__PURE__ */ React.createElement(Modal, {
+    onClose
+  }, /* @__PURE__ */ React.createElement(import_react5.Form, {
     method: "post",
     className: "md:w-96"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
@@ -401,14 +372,194 @@ function DashboardCategoryRoute() {
     className: "flex justify-end gap-2 mt-5"
   }, /* @__PURE__ */ React.createElement("button", {
     type: "button",
-    onClick: handleCloseShowCreateModal,
+    disabled: isSubmiting,
+    onClick: () => onClose(),
     className: "text-gray-900 border-2 border-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2 mb-2 hover:opacity-80 disabled:opacity-50"
   }, "Cancel"), /* @__PURE__ */ React.createElement("button", {
     type: "submit",
+    disabled: isSubmiting,
     name: "intent",
     value: "create",
     className: "text-white border-2 border-gray-800 bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 disabled:opacity-50"
-  }, "Acept")))) : null);
+  }, "Save ", isSubmiting ? "..." : ""))));
+}
+
+// app/components/category-modal-edit.tsx
+var import_react6 = require("@remix-run/react");
+function CategoryModalEdit({ category, isSubmiting, onClose }) {
+  let { entityId, name } = category;
+  return /* @__PURE__ */ React.createElement(Modal, {
+    onClose
+  }, /* @__PURE__ */ React.createElement(import_react6.Form, {
+    method: "post",
+    className: "md:w-96"
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "hidden",
+    name: "entityId",
+    value: entityId
+  }), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
+    htmlFor: "name",
+    className: "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+  }, "Name"), /* @__PURE__ */ React.createElement("input", {
+    type: "text",
+    id: "name",
+    defaultValue: name,
+    name: "name",
+    className: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5",
+    required: !0
+  })), /* @__PURE__ */ React.createElement("div", {
+    className: "flex justify-end gap-2 mt-5"
+  }, /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    disabled: isSubmiting,
+    onClick: () => onClose(),
+    className: "text-gray-900 border-2 border-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2 mb-2 hover:opacity-80 disabled:opacity-50"
+  }, "Cancel"), /* @__PURE__ */ React.createElement("button", {
+    type: "submit",
+    disabled: isSubmiting,
+    name: "intent",
+    value: "edit",
+    className: "text-white border-2 border-gray-800 bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 disabled:opacity-50"
+  }, "Save ", isSubmiting ? "..." : ""))));
+}
+
+// app/components/confirm-modal-delete.tsx
+var import_react7 = require("@remix-run/react");
+function ConfirmModalDelete({ entityId, isSubmiting, message, onClose }) {
+  return /* @__PURE__ */ React.createElement(Modal, {
+    onClose
+  }, /* @__PURE__ */ React.createElement(import_react7.Form, {
+    method: "post",
+    className: "md:w-96"
+  }, /* @__PURE__ */ React.createElement("input", {
+    type: "hidden",
+    name: "entityId",
+    value: entityId
+  }), /* @__PURE__ */ React.createElement("p", null, message), /* @__PURE__ */ React.createElement("div", {
+    className: "flex justify-end gap-2 mt-5"
+  }, /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    disabled: isSubmiting,
+    onClick: () => onClose(),
+    className: "text-gray-900 border-2 border-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2 mb-2 hover:opacity-80 disabled:opacity-50"
+  }, "Cancel"), /* @__PURE__ */ React.createElement("button", {
+    type: "submit",
+    disabled: isSubmiting,
+    name: "intent",
+    value: "delete",
+    className: "text-white border-2 border-gray-800 bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 disabled:opacity-50"
+  }, "Delete ", isSubmiting ? "..." : ""))));
+}
+
+// app/components/dash-header.tsx
+var import_react8 = require("react"), import_remix3 = require("@clerk/remix");
+function DashHeader({ title }) {
+  let { signOut } = (0, import_remix3.useClerk)(), [isDisabled, setIsDisabled] = (0, import_react8.useState)(!1);
+  return /* @__PURE__ */ React.createElement("section", {
+    className: "flex justify-between"
+  }, /* @__PURE__ */ React.createElement("h1", {
+    className: "text-2xl font-extrabold md:text-3xl"
+  }, title), /* @__PURE__ */ React.createElement("button", {
+    disabled: isDisabled,
+    type: "button",
+    onClick: async () => {
+      setIsDisabled(!0), await signOut(), setIsDisabled(!1), window.location.href = "/";
+    },
+    className: "text-gray-900 hover:text-white border-2 border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hidden md:block disabled:opacity-50"
+  }, "Logout"));
+}
+
+// app/components/toast.tsx
+var import_react9 = require("react");
+function Toast({ message, onClose, delay = !0 }) {
+  return (0, import_react9.useEffect)(() => {
+    delay && setTimeout(onClose, 2500);
+  }, []), /* @__PURE__ */ React.createElement("div", {
+    id: "toast",
+    className: "fixed right-4 bottom-5"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "flex items-center p-4 mb-4 w-full max-w-xs rounded-lg shadow text-white bg-black gap-3",
+    role: "alert"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "ml-3 text-sm font-normal"
+  }, message), /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    onClick: () => onClose(),
+    className: "ml-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 inline-flex h-8 w-8 text-gray-500 hover:text-white bg-gray-100 hover:bg-gray-200",
+    "data-dismiss-target": "#toast",
+    "aria-label": "Close"
+  }, /* @__PURE__ */ React.createElement("span", {
+    className: "sr-only"
+  }, "Close"), /* @__PURE__ */ React.createElement("svg", {
+    "aria-hidden": "true",
+    className: "w-5 h-5",
+    fill: "#000",
+    viewBox: "0 0 20 20",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, /* @__PURE__ */ React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z",
+    clipRule: "evenodd"
+  })))));
+}
+
+// app/routes/dashboard/categories.tsx
+async function loader3({ request }) {
+  let { userId } = await (0, import_ssr3.getAuth)(request);
+  if (!userId)
+    return (0, import_node3.redirect)("/sign-up");
+  let categories = await getAllCategoriesByUser({ userId, perPage: 200 });
+  return (0, import_node3.json)({ categories, date: +new Date() });
+}
+async function action({ request }) {
+  let { userId } = await (0, import_ssr3.getAuth)(request);
+  if (!userId)
+    return (0, import_node3.redirect)("/sign-up");
+  let formData = await request.formData(), intent = formData.get("intent");
+  if (intent === "create") {
+    let name = formData.get("name"), category = await createCategory({ userId, name });
+    return (0, import_node3.json)({ intent, category });
+  } else if (intent === "edit") {
+    let name = formData.get("name"), entityId = formData.get("entityId"), category = await updateCategory({ entityId, userId, name });
+    return (0, import_node3.json)({ intent, category });
+  } else if (intent === "delete") {
+    let entityId = formData.get("entityId");
+    await deleteCategory(entityId);
+  }
+  return (0, import_node3.json)({ intent });
+}
+function DashboardCategoryRoute() {
+  let { categories } = (0, import_react10.useLoaderData)(), data = (0, import_react10.useActionData)(), { state } = (0, import_react10.useTransition)(), isSubmiting = state === "submitting", [showCreateModal, setShowCreateModal] = (0, import_react11.useState)(!1), [message, setMessage] = (0, import_react11.useState)(), [categoryEdit, setCategoryEdit] = (0, import_react11.useState)(null), [categoryDelelteId, setCategoryDeleteId] = (0, import_react11.useState)(null);
+  return console.log(data), (0, import_react11.useEffect)(() => {
+    (data == null ? void 0 : data.intent) === "create" && (data == null ? void 0 : data.category) ? (setShowCreateModal(!1), setMessage("Create success")) : (data == null ? void 0 : data.intent) === "edit" && (data == null ? void 0 : data.category) ? (setCategoryEdit(null), setMessage("Update success")) : (data == null ? void 0 : data.intent) === "delete" && (setCategoryDeleteId(null), setMessage("Delete success"));
+  }, [data]), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
+    title: "Categories"
+  }), /* @__PURE__ */ React.createElement("div", {
+    className: "mt-4"
+  }, /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    onClick: () => setShowCreateModal(!0),
+    className: "text-sm font-bold underline"
+  }, " + New category ")), /* @__PURE__ */ React.createElement(CategoryList, {
+    categories,
+    onSelect: setCategoryEdit,
+    onDelete: setCategoryDeleteId
+  }), showCreateModal ? /* @__PURE__ */ React.createElement(CategoryModalCreate, {
+    isSubmiting,
+    onClose: () => setShowCreateModal(!1)
+  }) : null, categoryEdit ? /* @__PURE__ */ React.createElement(CategoryModalEdit, {
+    isSubmiting,
+    onClose: () => setCategoryEdit(null),
+    category: categoryEdit
+  }) : null, categoryDelelteId ? /* @__PURE__ */ React.createElement(ConfirmModalDelete, {
+    entityId: categoryDelelteId,
+    isSubmiting,
+    onClose: () => setCategoryDeleteId(null),
+    message: "Are your sure delete this category?"
+  }) : null, message ? /* @__PURE__ */ React.createElement(Toast, {
+    message,
+    onClose: () => setMessage(null)
+  }) : null);
 }
 
 // app/routes/dashboard/categories/new.tsx
@@ -475,7 +626,7 @@ __export(tips_exports, {
   default: () => DashboardTipsRoute,
   loader: () => loader4
 });
-var import_node4 = require("@remix-run/node"), import_react8 = require("@remix-run/react");
+var import_node4 = require("@remix-run/node"), import_react12 = require("@remix-run/react");
 
 // app/utils/params.server.ts
 function getQueryIntParameter(request, name, defaultValue) {
@@ -489,10 +640,10 @@ function loader4({ request }) {
   return (0, import_node4.json)({ offset });
 }
 function DashboardTipsRoute() {
-  let { offset } = (0, import_react8.useLoaderData)();
+  let { offset } = (0, import_react12.useLoaderData)();
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
     title: "Tips"
-  }), /* @__PURE__ */ React.createElement("h1", null, "products dash"), /* @__PURE__ */ React.createElement("p", null, "Offset: ", offset), /* @__PURE__ */ React.createElement(import_react8.Link, {
+  }), /* @__PURE__ */ React.createElement("h1", null, "products dash"), /* @__PURE__ */ React.createElement("p", null, "Offset: ", offset), /* @__PURE__ */ React.createElement(import_react12.Link, {
     to: "/dashboard/tips?offset=2"
   }, "Next"));
 }
@@ -533,7 +684,7 @@ __export(routes_exports, {
   default: () => IndexRoute,
   loader: () => loader5
 });
-var import_ssr4 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react9 = require("@remix-run/react");
+var import_ssr4 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react13 = require("@remix-run/react");
 async function loader5({ request }) {
   let { userId } = await (0, import_ssr4.getAuth)(request);
   return userId ? (0, import_node5.redirect)("/dashboard") : null;
@@ -541,15 +692,15 @@ async function loader5({ request }) {
 function IndexRoute() {
   return /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
-  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react9.Link, {
+  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react13.Link, {
     to: "/sign-in"
-  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react9.Link, {
+  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react13.Link, {
     to: "/sign-up"
   }, "Sign Up"));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "3b41d684", entry: { module: "/build/entry.client-N2467REH.js", imports: ["/build/_shared/chunk-PQV6DCII.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-WBTDV7LP.js", imports: ["/build/_shared/chunk-KI6VKGMH.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-UMFRK5Z7.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-APM7U677.js", imports: ["/build/_shared/chunk-KI6VKGMH.js", "/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories/new": { id: "routes/dashboard/categories/new", parentId: "routes/dashboard/categories", path: "new", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories/new-X2433CSU.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-TFYHQY27.js", imports: ["/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-KZ23TGPC.js", imports: ["/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-TGT2O53L.js", imports: ["/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-RFRHBRQR.js", imports: ["/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-6FFKBAHQ.js", imports: ["/build/_shared/chunk-7DW34RNL.js", "/build/_shared/chunk-IPP4XDWJ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-G7LFOJSB.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-QFJYWKFY.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-YSKGKA6W.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-3B41D684.js" };
+var assets_manifest_default = { version: "8d2faeb7", entry: { module: "/build/entry.client-MS4ASGL3.js", imports: ["/build/_shared/chunk-47DFYYCO.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-UGJCTTJW.js", imports: ["/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-IQ3SJO2W.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-322JNA4O.js", imports: ["/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories/new": { id: "routes/dashboard/categories/new", parentId: "routes/dashboard/categories", path: "new", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories/new-XSBX3TLG.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-2W7FI2RZ.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-PRWOKER7.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-OHBXYUUX.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-NNW3JFGC.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-KM5HGMSE.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-U5ZQKLXC.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-NFOEHZBB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-JZIR4BBJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-8D2FAEB7.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

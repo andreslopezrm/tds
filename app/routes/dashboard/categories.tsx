@@ -1,13 +1,16 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { useActionData, useLoaderData, useTransition } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import CategoryList from "~/components/category-list";
+import CategoryModalCreate from "~/components/category-modal-create";
+import CategoryModalEdit from "~/components/category-modal-edit";
+import ConfirmModalDelete from "~/components/confirm-modal-delete";
 import DashHeader from "~/components/dash-header";
-import { Modal } from "~/components/modal";
-import { createCategory, getAllCategoriesByUser } from "~/db/category.server";
+import Toast from "~/components/toast";
+import { Category, createCategory, deleteCategory, getAllCategoriesByUser, updateCategory } from "~/db/category.server";
 
-type IntentType = "create" | "edit";
+type IntentType = "create" | "edit" | "delete";
 
 export async function loader({ request }: LoaderArgs) {
     const { userId } = await getAuth(request);
@@ -31,12 +34,17 @@ export async function action({ request }: ActionArgs) {
     const intent = formData.get("intent") as IntentType; 
     
     if(intent === "create") {
-        const name = formData.get("name") as string | null;
-        if(!name){
-            return json({ intent, errors: { name: "Name required "}})
-        }
+        const name = formData.get("name") as string;
         const category = await createCategory({ userId, name });
         return json({ intent, category });
+    } else if(intent === "edit") {
+        const name = formData.get("name") as string;
+        const entityId = formData.get("entityId") as string;
+        const category = await updateCategory({ entityId, userId, name });
+        return json({ intent, category });
+    } else if(intent === "delete") {
+        const entityId = formData.get("entityId") as string;
+        await deleteCategory(entityId);
     }
     
     return json({ intent });
@@ -46,16 +54,26 @@ export default function DashboardCategoryRoute() {
 
     const { categories } = useLoaderData();
     const data = useActionData();
-    const [showCreateModal, setShowCreateModal] = useState(false);
-
-    const handleOpenShowCreateModal = () => setShowCreateModal(true);
-
-    const handleCloseShowCreateModal = () => setShowCreateModal(false);
+    const { state } = useTransition();
+    const isSubmiting = state === "submitting";
     
+    const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>();
+    const [categoryEdit, setCategoryEdit] = useState<Category | null>(null);
+    const [categoryDelelteId, setCategoryDeleteId] = useState<string | null>(null);
+    
+    console.log(data);
+
     useEffect(() => {
         if(data?.intent === "create" && data?.category) {
-            
-            handleCloseShowCreateModal();
+            setShowCreateModal(false);
+            setMessage("Create success");
+        } else if(data?.intent === "edit" && data?.category) {
+            setCategoryEdit(null);
+            setMessage("Update success");
+        } else if(data?.intent === "delete") {
+            setCategoryDeleteId(null);
+            setMessage("Delete success");
         }
     }, [data]);
 
@@ -63,24 +81,20 @@ export default function DashboardCategoryRoute() {
         <div>
             <DashHeader title="Categories" />
             <div className="mt-4">
-                <button type="button" onClick={handleOpenShowCreateModal}>New Category</button>
+                <button type="button" onClick={() => setShowCreateModal(true)} className="text-sm font-bold underline"> + New category </button>
             </div>
-            <CategoryList categories={categories} />
+            <CategoryList categories={categories} onSelect={setCategoryEdit} onDelete={setCategoryDeleteId} />
             {
-                showCreateModal ? (
-                    <Modal onClose={handleCloseShowCreateModal}>
-                        <Form method="post" className="md:w-96">
-                            <div>
-                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>
-                                <input type="text" id="name" name="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" required />
-                            </div>
-                            <div className="flex justify-end gap-2 mt-5">
-                                <button type="button" onClick={handleCloseShowCreateModal} className="text-gray-900 border-2 border-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-3 py-1.5 text-center mr-2 mb-2 hover:opacity-80 disabled:opacity-50">Cancel</button>
-                                <button type="submit" name="intent" value="create" className="text-white border-2 border-gray-800 bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 disabled:opacity-50">Acept</button>
-                            </div>
-                        </Form>
-                    </Modal>
-                ) : null
+                showCreateModal ? (<CategoryModalCreate isSubmiting={isSubmiting} onClose={() => setShowCreateModal(false)} />) : null
+            }
+            {
+                categoryEdit ? (<CategoryModalEdit isSubmiting={isSubmiting} onClose={() => setCategoryEdit(null)} category={categoryEdit} />) : null
+            }
+            {
+                categoryDelelteId ? (<ConfirmModalDelete entityId={categoryDelelteId} isSubmiting={isSubmiting} onClose={() => setCategoryDeleteId(null)} message="Are your sure delete this category?" />) : null
+            }
+            {
+                message ? <Toast message={message} onClose={() => setMessage(null)} /> : null
             }
         </div>
     );

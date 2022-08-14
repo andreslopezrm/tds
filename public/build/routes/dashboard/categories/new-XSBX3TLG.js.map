@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/categories/new.tsx?browser", "../../../../../app/routes/dashboard/categories/new.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/categories/new.tsx\";", "import DashHeader from \"~/components/dash-header\";\n\nexport default function DashboardCategoryNewRoute() {\n    return (\n        <div>\n            <DashHeader title=\"New Category\" />\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;AAAA;;;ACAA;AAEe,qCAAqC;AAChD,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

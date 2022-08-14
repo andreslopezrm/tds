@@ -13,7 +13,7 @@ export class Category extends Entity {}
 
 export type CategoryCreate = Pick<Category, "userId" | "name">
 
-export type CategoryUpdate = Pick<Category, "entityId" | "name">
+export type CategoryUpdate = Pick<Category, "entityId" | "userId" | "name">
 
 export type CategorySearchSlug = Pick<Category, "userId" | "slug">
 
@@ -99,15 +99,19 @@ export async function getCategoryByUserAndSlug({ userId, slug }: CategorySearchS
                 .first();
 }
 
-export async function updateCategory({ entityId, name }: CategoryUpdate): Promise<string> {
+export async function updateCategory({ entityId, userId, name }: CategoryUpdate): Promise<Category> {
     const repository = await getCategoryRepository();
     const category = await getCategoryById(entityId);
     
     if(!category) {
         throw new Error("Category not found");
     }
+    const slug = await getCategorySlug({ userId, name });
     category.name = name;
-    return repository.save(category);
+    category.slug = slug;
+    
+    await repository.save(category);
+    return category;
 }
 
 export async function deleteCategory(entityId: string): Promise<void> {
