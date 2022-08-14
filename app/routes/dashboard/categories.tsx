@@ -1,14 +1,16 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
-import { useActionData, useLoaderData, useTransition } from "@remix-run/react";
+import { Link, useActionData, useLoaderData, useTransition } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import CategoryList from "~/components/category-list";
 import CategoryModalCreate from "~/components/category-modal-create";
 import CategoryModalEdit from "~/components/category-modal-edit";
 import ConfirmModalDelete from "~/components/confirm-modal-delete";
 import DashHeader from "~/components/dash-header";
+import LoadMore from "~/components/load-more";
 import Toast from "~/components/toast";
-import { Category, createCategory, deleteCategory, getAllCategoriesByUser, updateCategory } from "~/db/category.server";
+import { Category, countAllCategoriesByUser, createCategory, deleteCategory, getAllCategoriesByUser, updateCategory } from "~/db/category.server";
+import { getQueryIntParameter } from "~/utils/params.server";
 
 type IntentType = "create" | "edit" | "delete";
 
@@ -18,9 +20,11 @@ export async function loader({ request }: LoaderArgs) {
     if(!userId) {
         return redirect("/sign-up");
     }
+    const offset = getQueryIntParameter(request, "offset", 0);
+    const perPage = getQueryIntParameter(request, "per_page", 200); 
 
-    const categories = await getAllCategoriesByUser({ userId, perPage: 200 });
-    return json({ categories, date: +new Date() });
+    const [total, categories] = await Promise.all([ countAllCategoriesByUser(userId), getAllCategoriesByUser({ userId, offset, perPage }) ]);
+    return json({ total, categories, offset, perPage });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -52,7 +56,7 @@ export async function action({ request }: ActionArgs) {
 
 export default function DashboardCategoryRoute() {
 
-    const { categories } = useLoaderData();
+    const { total, categories, offset, perPage } = useLoaderData();
     const data = useActionData();
     const { state } = useTransition();
     const isSubmiting = state === "submitting";
@@ -61,8 +65,6 @@ export default function DashboardCategoryRoute() {
     const [message, setMessage] = useState<string | null>();
     const [categoryEdit, setCategoryEdit] = useState<Category | null>(null);
     const [categoryDelelteId, setCategoryDeleteId] = useState<string | null>(null);
-    
-    console.log(data);
 
     useEffect(() => {
         if(data?.intent === "create" && data?.category) {
@@ -84,6 +86,7 @@ export default function DashboardCategoryRoute() {
                 <button type="button" onClick={() => setShowCreateModal(true)} className="text-sm font-bold underline"> + New category </button>
             </div>
             <CategoryList categories={categories} onSelect={setCategoryEdit} onDelete={setCategoryDeleteId} />
+            <LoadMore total={total} current={categories.length} path="/dashboard/categories" offset={offset} perPage={perPage} />
             {
                 showCreateModal ? (<CategoryModalCreate isSubmiting={isSubmiting} onClose={() => setShowCreateModal(false)} />) : null
             }

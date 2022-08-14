@@ -17,8 +17,10 @@ export default function CategoryItem({ category, onSelect, onDelete }: Props) {
                 { slug }
             </td>
             <td className="py-4 px-6">
-                <button onClick={() => onSelect(category)}>Edit</button>
-                <button onClick={() => onDelete(entityId)}>Delete</button>
+                <div className="inline-flex gap-2 text-black">
+                    <button onClick={() => onSelect(category)} className="underline">Edit</button>
+                    <button onClick={() => onDelete(entityId)}>Delete</button>
+                </div>
             </td>
         </tr>
     );
