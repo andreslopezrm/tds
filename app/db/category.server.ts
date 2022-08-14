@@ -1,20 +1,20 @@
 import { Entity, Repository, Schema } from "redis-om";
 import { redisClient, redisConnect } from "./redis.server";
 
-interface Category {
+export interface Category {
     name: string,
     slug: string,
     userId: string,
     createAt: Date
 }
 
-class Category extends Entity {}
+export class Category extends Entity {}
 
-type CategoryCreate = Pick<Category, "userId" | "name" | "slug">
+export type CategoryCreate = Pick<Category, "userId" | "name" | "slug">
 
-type CategoryUpdate = Pick<Category, "entityId" | "name" | "slug">
+export type CategoryUpdate = Pick<Category, "entityId" | "name" | "slug">
 
-type CategorySearch = {
+export type CategorySearch = {
     userId: string;
     offset?: number;
     perPage?: number;

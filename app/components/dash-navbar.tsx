@@ -12,13 +12,13 @@ export default function DashNavbar() {
             </div>
             <hr className="mt-3" />
             <div className="hidden mt-3 font-bold px-2 md:block">Menu</div>
-            <ul className="mt-3">
+            <ul className="mt-3 w-full">
                 {menuItems.map(({ id, title, path, completePath }) => {
                     const isSelected = pathname == completePath;
                     const imageType = isSelected ? "fill" : "out";
                     return (
                         <li key={id} className="mt-2 px-2 py-1 rounded hover:bg-gray-200">
-                            <Link to={path} className="flex items-center md:gap-2">
+                            <Link to={path} className="flex items-center w-6 md:w-auto md:gap-2">
                                 <img src={`/images/${id}-${imageType}.png`} alt={title} className="w-6 h-6 md:w-4 md:h-4" />
                                 <span className={`hidden text-sm ${ isSelected ? "font-semibold" : "font-light" } md:block`}>{title}</span>
                             </Link>
