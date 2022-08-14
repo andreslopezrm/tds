@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/sign-in/$.tsx?browser", "../../../../app/routes/sign-in/$.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/sign-in/$.tsx\";", "import { SignIn } from \"@clerk/remix\";\n\nexport default function SignInRoute() {\n  return (\n    <main className=\"auth flex justify-center p-2 md:p-8\">\n      <SignIn routing={\"path\"} path={\"/sign-in\"} />\n    </main>\n  );\n}\n\n"],
+  "mappings": ";;;;;;;;;;AAAA;;;ACAA;AAAA,mBAAuB;AAER,uBAAuB;AACpC,SACE,oCAAC,QAAD;AAAA,IAAM,WAAU;AAAA,KACd,oCAAC,qBAAD;AAAA,IAAQ,SAAS;AAAA,IAAQ,MAAM;AAAA;AAAA;",
+  "names": []
+}

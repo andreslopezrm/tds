@@ -24,7 +24,7 @@ const categorySchema = new Schema(Category, {
     name: { type: "string" },
     slug: { type: "string", indexed: true },
     userId: { type: "string", indexed: true },
-    createAt: { type: "date"}
+    createAt: { type: "date", sortable: true }
 });
 
 async function getCategoryRepository(): Promise<Repository<Category>> {
@@ -46,6 +46,7 @@ export async function getAllCategoriesByUser({ userId, offset = 0, perPage = 1}:
     return await repository.search()
             .where("userId")
             .equals(userId)
+            .sortDescending("createAt")
             .return
             .page(offset, perPage);
 }
