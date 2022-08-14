@@ -10,10 +10,20 @@ interface Category {
 
 class Category extends Entity {}
 
+type CategoryCreate = Pick<Category, "userId" | "name" | "slug">
+
+type CategoryUpdate = Pick<Category, "entityId" | "name" | "slug">
+
+type CategorySearch = {
+    userId: string;
+    offset?: number;
+    perPage?: number;
+}
+
 const categorySchema = new Schema(Category, {
     name: { type: "string" },
-    slug: { type: "string" },
-    userId: { type: "string" },
+    slug: { type: "string", indexed: true },
+    userId: { type: "string", indexed: true },
     createAt: { type: "date"}
 });
 
@@ -25,12 +35,12 @@ async function getCategoryRepository(): Promise<Repository<Category>> {
     return repository;
 }
 
-export async function createCategory(userId: string, name: string) : Promise<Category> {
+export async function createCategory({ userId, name, slug } : CategoryCreate) : Promise<Category> {
     const repository = await getCategoryRepository();
-    return repository.createAndSave({ name, userId });
+    return repository.createAndSave({ userId, name, slug, createAt: new Date() });
 }
 
-export async function getAllCategoriesByUser(userId: string, offset: number = 0, perPage: number = 1): Promise<Category[]> {
+export async function getAllCategoriesByUser({ userId, offset = 0, perPage = 1}: CategorySearch): Promise<Category[]> {
     const repository = await getCategoryRepository();
 
     return await repository.search()
@@ -50,23 +60,32 @@ export async function countAllCategoriesByUser(userId: string): Promise<number> 
         .count();
 } 
 
-export async function getCategoryById(categoryId: string): Promise<Category> {
+export async function getCategoryById(entityId: string): Promise<Category> {
     const repository = await getCategoryRepository();
-    return repository.fetch(categoryId);
+    return repository.fetch(entityId);
 }
 
-export async function updateCategory(categoryId: string, name: string): Promise<string> {
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
     const repository = await getCategoryRepository();
-    const category = await getCategoryById(categoryId);
+    return repository.search()
+                .where("slug")
+                .equals(slug)
+                .first();
+}
+
+export async function updateCategory({ entityId, name, slug }: CategoryUpdate): Promise<string> {
+    const repository = await getCategoryRepository();
+    const category = await getCategoryById(entityId);
     
     if(!category) {
         throw new Error("Category not found");
     }
     category.name = name;
+    category.slug = slug;
     return repository.save(category);
 }
 
-export async function deleteCategory(categoryId: string): Promise<void> {
+export async function deleteCategory(entityId: string): Promise<void> {
     const repository = await getCategoryRepository();
-    await repository.remove(categoryId);
+    await repository.remove(entityId);
 }

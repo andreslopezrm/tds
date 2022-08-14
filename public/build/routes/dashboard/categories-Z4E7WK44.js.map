@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/db/category.server", "browser-route-module:routes/dashboard/categories.tsx?browser", "../../../../app/routes/dashboard/categories.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/dashboard/categories.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { json, LoaderArgs, redirect } from \"@remix-run/node\";\nimport { useLoaderData } from \"@remix-run/react\";\nimport DashHeader from \"~/components/dash-header\";\nimport { getAllCategoriesByUser } from \"~/db/category.server\";\n\nexport async function loader({ request }: LoaderArgs) {\n    const { userId } = await getAuth(request);\n    \n    if(!userId) {\n        return redirect(\"/sign-up\");\n    }\n\n    const categories = await getAllCategoriesByUser(userId);\n    return json({ categories });\n}\n\nexport default function DashboardCategoryRoute() {\n\n    const { categories } = useLoaderData<typeof loader>();\n    console.log(categories);\n\n    return (\n        <div>\n            <DashHeader title=\"Categories\" />\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AAAA,iBAAwB;AAExB;AAEA,sBAAuC;AAaxB,kCAAkC;AAE7C,QAAM,EAAE,eAAe;AACvB,UAAQ,IAAI;AAEZ,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

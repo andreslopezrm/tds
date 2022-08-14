@@ -1,5 +1,9 @@
+import DashHeader from "~/components/dash-header";
+
 export default function DashboardIndexRoute(){
     return (
-        <h1>index dash</h1>
+        <div>
+            <DashHeader title="Home" />
+        </div>
     )
 }

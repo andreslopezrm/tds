@@ -1,5 +1,9 @@
+import DashHeader from "~/components/dash-header";
+
 export default function DashboardPerfilRoute() {
     return (
-        <h1>Perfil</h1>
+        <div>
+            <DashHeader title="Perfil" />
+        </div>
     );
 }

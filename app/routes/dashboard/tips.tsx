@@ -1,5 +1,6 @@
 import { json, LoaderArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import DashHeader from "~/components/dash-header";
 import { getQueryIntParameter } from "~/utils/params.server";
 
 
@@ -14,9 +15,10 @@ export default function DashboardTipsRoute(){
 
     return (
         <div>
+            <DashHeader title="Tips" />
             <h1>products dash</h1>
             <p>Offset: {offset}</p>
-            <Link to="/dashboard/products?offset=2">Next</Link>
+            <Link to="/dashboard/tips?offset=2">Next</Link>
         </div>
     )
 }

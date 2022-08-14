@@ -1,4 +1,5 @@
 import { Entity, Schema } from "redis-om";
+import { createCategory } from "./category.server";
 import { redisClient, redisConnect } from "./redis.server";
 
 class User extends Entity {}
@@ -10,10 +11,17 @@ const userSchema = new Schema(User, {
     createAt: { type: "date"}
 });
 
-export async function checkUser(userId: string) {
+
+async function getUserRepository() {
     await redisConnect();
-  
     const repository = redisClient.fetchRepository(userSchema);
+  
+    await repository.createIndex();
+    return repository;
+}
+
+export async function checkUser(userId: string) {
+    const repository = await getUserRepository();
     const user = await repository.search()
                         .where("clerkId")
                         .equals(userId)
@@ -25,15 +33,11 @@ export async function checkUser(userId: string) {
             active: true,
             createAt: new Date()
         });
+
+        await createCategory({
+            userId,
+            name: "Default",
+            slug: "default"
+        });
     }
 }
-
-async function createIndex() {
-    await redisConnect();
-    const repository = redisClient.fetchRepository(userSchema);
-  
-    await repository.createIndex();
-    await redisClient.close();
-}
-  
-createIndex();

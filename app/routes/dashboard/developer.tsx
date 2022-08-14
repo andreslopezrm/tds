@@ -1,5 +1,9 @@
+import DashHeader from "~/components/dash-header";
+
 export default function DashboardDeveloperRoute() {
     return (
-        <h1>DEvelper</h1>
+        <div>
+            <DashHeader title="Developer" />
+        </div>
     );
 }

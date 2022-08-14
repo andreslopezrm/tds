@@ -1,5 +1,9 @@
+import DashHeader from "~/components/dash-header";
+
 export default function DashboardStatsRoute() {
     return (
-        <h1>Stats</h1>
+        <div>
+            <DashHeader title="Stats" />
+        </div>
     );
 }

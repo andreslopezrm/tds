@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/components/dash-header.tsx"],
+  "sourcesContent": ["import { useState } from \"react\";\nimport { useClerk, } from \"@clerk/remix\";\n\ntype Props = {\n    title: string\n};\n\nexport default function DashHeader({ title } : Props) {\n    const { signOut } = useClerk();\n    const [isDisabled, setIsDisabled] = useState(false);\n\n    const handleOnExitSession = async () => {\n        setIsDisabled(true);\n        await signOut();\n        setIsDisabled(false);\n        window.location.href = '/';\n    }\n\n    return (\n        <section className=\"flex justify-between\">\n            <h1 className=\"text-2xl font-extrabold md:text-3xl\">{title}</h1>\n            <button disabled={isDisabled} type=\"button\" onClick={handleOnExitSession} className=\"text-gray-900 hover:text-white border-2 border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 hidden md:block disabled:opacity-50\">Logout</button>\n        </section>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;AAAA;AAAA,mBAAyB;AACzB,mBAA0B;AAMX,oBAAoB,EAAE,SAAiB;AAClD,QAAM,EAAE,YAAY;AACpB,QAAM,CAAC,YAAY,iBAAiB,2BAAS;AAE7C,QAAM,sBAAsB,YAAY;AACpC,kBAAc;AACd,UAAM;AACN,kBAAc;AACd,WAAO,SAAS,OAAO;AAAA;AAG3B,SACI,oCAAC,WAAD;AAAA,IAAS,WAAU;AAAA,KACf,oCAAC,MAAD;AAAA,IAAI,WAAU;AAAA,KAAuC,QACrD,oCAAC,UAAD;AAAA,IAAQ,UAAU;AAAA,IAAY,MAAK;AAAA,IAAS,SAAS;AAAA,IAAqB,WAAU;AAAA,KAAqO;AAAA;",
+  "names": []
+}
