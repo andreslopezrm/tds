@@ -9,7 +9,7 @@ import ConfirmModalDelete from "~/components/confirm-modal-delete";
 import DashHeader from "~/components/dash-header";
 import LoadMore from "~/components/load-more";
 import Toast from "~/components/toast";
-import { Category, countAllCategoriesByUser, createCategory, deleteCategory, getAllCategoriesByUser, updateCategory } from "~/db/category.server";
+import { Category, countAllCategoriesByUser, createCategory, deleteCategory, getAllCategoriesByUserPaging, updateCategory } from "~/db/category.server";
 import { getQueryIntParameter } from "~/utils/params.server";
 
 type IntentType = "create" | "edit" | "delete";
@@ -23,7 +23,7 @@ export async function loader({ request }: LoaderArgs) {
     const offset = getQueryIntParameter(request, "offset", 0);
     const perPage = getQueryIntParameter(request, "per_page", 200); 
 
-    const [total, categories] = await Promise.all([ countAllCategoriesByUser(userId), getAllCategoriesByUser({ userId, offset, perPage }) ]);
+    const [total, categories] = await Promise.all([ countAllCategoriesByUser(userId), getAllCategoriesByUserPaging({ userId, offset, perPage }) ]);
     return json({ total, categories, offset, perPage });
 }
 
@@ -64,7 +64,7 @@ export default function DashboardCategoryRoute() {
     const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
     const [message, setMessage] = useState<string | null>();
     const [categoryEdit, setCategoryEdit] = useState<Category | null>(null);
-    const [categoryDelelteId, setCategoryDeleteId] = useState<string | null>(null);
+    const [categoryDeleteId, setCategoryDeleteId] = useState<string | null>(null);
 
     useEffect(() => {
         if(data?.intent === "create" && data?.category) {
@@ -94,7 +94,7 @@ export default function DashboardCategoryRoute() {
                 categoryEdit ? (<CategoryModalEdit isSubmiting={isSubmiting} onClose={() => setCategoryEdit(null)} category={categoryEdit} />) : null
             }
             {
-                categoryDelelteId ? (<ConfirmModalDelete entityId={categoryDelelteId} isSubmiting={isSubmiting} onClose={() => setCategoryDeleteId(null)} message="Are your sure delete this category?" />) : null
+                categoryDeleteId ? (<ConfirmModalDelete entityId={categoryDeleteId} isSubmiting={isSubmiting} onClose={() => setCategoryDeleteId(null)} message="Are your sure delete this category?" />) : null
             }
             {
                 message ? <Toast message={message} onClose={() => setMessage(null)} /> : null

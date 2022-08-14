@@ -3,10 +3,10 @@ import { Entity, Repository, Schema } from "redis-om";
 import { redisClient, redisConnect } from "./redis.server";
 
 export interface Category {
-    name: string,
-    slug: string,
-    userId: string,
-    createAt: Date
+    name: string;
+    slug: string;
+    userId: string;
+    createAt: Date;
 }
 
 export class Category extends Entity {}
@@ -55,15 +55,25 @@ export async function createCategory({ userId, name } : CategoryCreate) : Promis
     return repository.createAndSave({ userId, name, slug, createAt: new Date() });
 }
 
-export async function getAllCategoriesByUser({ userId, offset = 0, perPage = 1}: CategorySearch): Promise<Category[]> {
+export async function getAllCategoriesByUserPaging({ userId, offset = 0, perPage = 1}: CategorySearch): Promise<Category[]> {
     const repository = await getCategoryRepository();
 
-    return await repository.search()
+    return repository.search()
             .where("userId")
             .equals(userId)
             .sortDescending("createAt")
             .return
             .page(offset, perPage);
+}
+
+export async function getallCategoriesByUser(userId: string) {
+    const repository = await getCategoryRepository();
+    
+    return repository.search()
+            .where("userId")
+            .equals(userId)
+            .sortDescending("createAt")
+            .all();
 }
 
 export async function countAllCategoriesByUser(userId: string): Promise<number> {

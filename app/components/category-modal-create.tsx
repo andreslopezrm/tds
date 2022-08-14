@@ -11,7 +11,7 @@ export default function CategoryModalCreate({ isSubmiting, onClose }: Props) {
         <Modal onClose={onClose}>
             <Form method="post" className="md:w-96">
                 <div>
-                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>
+                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Name</label>
                     <input type="text" id="name" name="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" required />
                 </div>
                 <div className="flex justify-end gap-2 mt-5">
