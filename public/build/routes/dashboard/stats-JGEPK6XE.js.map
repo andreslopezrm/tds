@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/stats.tsx?browser", "../../../../app/routes/dashboard/stats.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/stats.tsx\";", "import DashHeader from \"~/components/dash-header\";\n\nexport default function DashboardStatsRoute() {\n    return (\n        <div>\n            <DashHeader title=\"Stats\" />\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;AAAA;;;ACAA;AAEe,+BAA+B;AAC1C,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}
