@@ -10,7 +10,7 @@ import TipModalCreate from "~/components/tip-modal-create";
 import { TipModalEdit } from "~/components/tip-modal-edit";
 import Toast from "~/components/toast";
 import { getAllCategoriesByUser } from "~/db/category.server";
-import { countAllTipsByUser, createTip, deleteTip, getAllTipsByUser, getTipsWithCategory, Tip, updateTip } from "~/db/tip.server";
+import { countAllTipsByUser, createTip, deleteTip, getAllTipsByUserPaging, getTipsWithCategory, Tip, updateTip } from "~/db/tip.server";
 import { getQueryIntParameter } from "~/utils/params.server";
 
 type IntentType = "create" | "edit" | "delete";
@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderArgs) {
 
     const [total, plainTips, categories] = await Promise.all([ 
         countAllTipsByUser(userId), 
-        getAllTipsByUser({ userId, offset, perPage }), 
+        getAllTipsByUserPaging({ userId, offset, perPage }), 
         getAllCategoriesByUser(userId) 
     ]);
 

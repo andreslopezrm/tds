@@ -1,5 +1,6 @@
 import { Entity, Repository, Schema } from "redis-om";
-import { Category } from "./category.server";
+import { getRamdomItemFromArray } from "~/utils/ramdom";
+import { Category, getCategoryByUserAndSlug } from "./category.server";
 import { redisClient, redisConnect } from "./redis.server";
 
 export interface Tip {
@@ -15,6 +16,8 @@ export class Tip extends Entity {}
 export type TipCreate = Pick<Tip, "userId" | "description" | "categoryId">
 
 export type TipUpdate = Pick<Tip, "entityId" | "description" | "categoryId">
+
+export type TipFilterCategory = Pick<Tip, "userId" |  "categoryId">
 
 export type TipSearch = {
     userId: string;
@@ -37,7 +40,27 @@ async function getTipRepository(): Promise<Repository<Tip>> {
     return repository;
 }
 
-export async function getAllTipsByUser({ userId, offset = 0, perPage = 1}: TipSearch): Promise<Tip[]> {
+export async function getAllTipsByUser(userId: string): Promise<Tip[]> {
+    const repository = await getTipRepository();
+
+    return repository.search()
+            .where("userId")
+            .equals(userId)
+            .all();
+}
+
+export async function getAllTipsByUserAndCategory({ userId, categoryId }: TipFilterCategory): Promise<Tip[]> {
+    const repository = await getTipRepository();
+
+    return repository.search()
+            .where("userId")
+            .equals(userId)
+            .where("categoryId")
+            .equals(categoryId)
+            .all();
+}
+
+export async function getAllTipsByUserPaging({ userId, offset = 0, perPage = 1}: TipSearch): Promise<Tip[]> {
     const repository = await getTipRepository();
 
     return repository.search()
@@ -96,4 +119,18 @@ export async function updateTip({ entityId, description, categoryId }: TipUpdate
 export async function deleteTip(entityId: string): Promise<void> {
     const repository = await getTipRepository();
     await repository.remove(entityId);
+}
+
+export async function getRamdomTip({ userId, categorySlug }: { userId: string, categorySlug: string | null }): Promise<Tip | null> {
+    if(categorySlug) {
+        const category = await getCategoryByUserAndSlug({ userId, slug: categorySlug });
+        
+        if(category) {
+            const tips = await getAllTipsByUserAndCategory({ userId, categoryId: category.entityId });
+            const tip = getRamdomItemFromArray(tips);
+        }
+    }
+
+    const tips = await getAllTipsByUser(userId);
+    return getRamdomItemFromArray(tips);
 }

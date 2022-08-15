@@ -26,7 +26,7 @@ async function getApiKeyRepository(): Promise<Repository<ApiKey>> {
 }
 
 export function generateApiKeyValue(): string {
-    return `tip-land-${uuid()}-key`;
+    return `${uuid()}-api-key`;
 }
 
 export async function getApiKeyByUser(userId: string): Promise<ApiKey | null> {
@@ -58,4 +58,11 @@ export async function updateApiKey(userId: string) : Promise<ApiKey> {
     return repository.createAndSave({ userId, value, updateAt: new Date() });
 }
 
-
+export async function getUserIdByApiKey(apiKey: string): Promise<string | undefined> {
+    const repository = await getApiKeyRepository();
+    const entity = await repository.search()
+                            .where("value")
+                            .equals(apiKey)
+                            .first();
+    return entity?.userId;
+}
