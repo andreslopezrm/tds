@@ -190,7 +190,7 @@ var import_redis_om2 = require("redis-om"), import_uuidv4 = require("uuidv4");
 
 // app/db/redis.server.ts
 var import_redis_om = require("redis-om"), redisClient = new import_redis_om.Client(), redisConnect = async () => {
-  console.log("conctando"), redisClient.isOpen() || (console.log("...abriando conexion"), await redisClient.open(process.env.REDIS_URL));
+  redisClient.isOpen() || await redisClient.open(process.env.REDIS_URL);
 };
 
 // app/db/apikey.server.ts
@@ -506,7 +506,7 @@ function DashHeader({ title }) {
 // app/components/load-more.tsx
 var import_react9 = require("@remix-run/react");
 function LoadMore({ total, current, path, offset, perPage }) {
-  if (console.log({ total, current, path, perPage, offset }), current >= total)
+  if (current >= total)
     return null;
   let nextPath = `${path}?offset=${offset}&per_page=${perPage += perPage}`;
   return /* @__PURE__ */ React.createElement("div", {
@@ -770,10 +770,48 @@ function DashboardIndexRoute() {
 // app/routes/dashboard/stats.tsx
 var stats_exports = {};
 __export(stats_exports, {
-  default: () => DashboardStatsRoute
+  default: () => DashboardStatsRoute,
+  loader: () => loader5
 });
+var import_ssr5 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react16 = require("@remix-run/react"), import_remix_utils = require("remix-utils");
+
+// app/db/stats.server.ts
+var import_redis_om5 = require("redis-om");
+var Stat = class extends import_redis_om5.Entity {
+}, statSchema = new import_redis_om5.Schema(Stat, {
+  userId: { type: "string", indexed: !0 },
+  createAt: { type: "date", indexed: !0 },
+  count: { type: "number" }
+});
+async function getStatRepository() {
+  await redisConnect();
+  let repository = redisClient.fetchRepository(statSchema);
+  return await repository.createIndex(), repository;
+}
+async function createStat(userId) {
+  let repository = await getStatRepository();
+  new Date().setHours(0, 0, 0);
+  let ids = await repository.search().allIds();
+  await repository.remove(ids);
+}
+async function getStatsInWeek(userId) {
+  let repository = await getStatRepository(), now = new Date();
+  now.setHours(0, 0, 0);
+  let sevenDaysAgo = new Date(+now - 5 * 864e5);
+  return await repository.search().where("userId").equals(userId).where("createAt").between(sevenDaysAgo, now).all();
+}
+
+// app/routes/dashboard/stats.tsx
+async function loader5({ request }) {
+  let { userId } = await (0, import_ssr5.getAuth)(request);
+  if (!userId)
+    return (0, import_node5.redirect)("/sign-up");
+  let stats = await getStatsInWeek(userId);
+  return (0, import_remix_utils.json)({ stats });
+}
 function DashboardStatsRoute() {
-  return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
+  let data = (0, import_react16.useLoaderData)();
+  return console.log(data), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
     title: "Stats"
   }));
 }
@@ -783,9 +821,9 @@ var tips_exports = {};
 __export(tips_exports, {
   action: () => action2,
   default: () => DashboardTipsRoute,
-  loader: () => loader5
+  loader: () => loader6
 });
-var import_ssr5 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react18 = require("@remix-run/react"), import_react19 = require("react");
+var import_ssr6 = require("@clerk/remix/ssr.server"), import_node6 = require("@remix-run/node"), import_react19 = require("@remix-run/react"), import_react20 = require("react");
 
 // app/components/tip-item.tsx
 function TipItem({ tip, onSelect, onDelete }) {
@@ -836,11 +874,11 @@ function TipList({ tips, onSelect, onDelete }) {
 }
 
 // app/components/tip-modal-create.tsx
-var import_react16 = require("@remix-run/react");
+var import_react17 = require("@remix-run/react");
 function TipModalCreate({ isSubmiting, categories, onClose }) {
   return /* @__PURE__ */ React.createElement(Modal, {
     onClose
-  }, /* @__PURE__ */ React.createElement(import_react16.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react17.Form, {
     method: "post",
     className: "md:w-96"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
@@ -886,12 +924,12 @@ function TipModalCreate({ isSubmiting, categories, onClose }) {
 }
 
 // app/components/tip-modal-edit.tsx
-var import_react17 = require("@remix-run/react");
+var import_react18 = require("@remix-run/react");
 function TipModalEdit({ tip, isSubmiting, categories, onClose }) {
   let { categoryId, description } = tip;
-  return console.log(categoryId), /* @__PURE__ */ React.createElement(Modal, {
+  return /* @__PURE__ */ React.createElement(Modal, {
     onClose
-  }, /* @__PURE__ */ React.createElement(import_react17.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react18.Form, {
     method: "post",
     className: "md:w-96"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
@@ -938,7 +976,7 @@ function TipModalEdit({ tip, isSubmiting, categories, onClose }) {
 }
 
 // app/db/tip.server.ts
-var import_redis_om5 = require("redis-om");
+var import_redis_om6 = require("redis-om");
 
 // app/utils/ramdom.ts
 function getRamdomItemFromArray(itemLists) {
@@ -946,8 +984,8 @@ function getRamdomItemFromArray(itemLists) {
 }
 
 // app/db/tip.server.ts
-var Tip = class extends import_redis_om5.Entity {
-}, tipSchema = new import_redis_om5.Schema(Tip, {
+var Tip = class extends import_redis_om6.Entity {
+}, tipSchema = new import_redis_om6.Schema(Tip, {
   description: { type: "string" },
   categoryId: { type: "string", indexed: !0 },
   userId: { type: "string", indexed: !0 },
@@ -982,8 +1020,7 @@ async function getTipById(entityId) {
   return (await getTipRepository()).fetch(entityId);
 }
 async function createTip({ userId, description, categoryId }) {
-  let repository = await getTipRepository();
-  return console.log({ userId, description, categoryId, createAt: new Date() }), repository.createAndSave({ userId, description, categoryId, createAt: new Date() });
+  return (await getTipRepository()).createAndSave({ userId, description, categoryId, createAt: new Date() });
 }
 async function updateTip({ entityId, description, categoryId }) {
   let repository = await getTipRepository(), tip = await getTipById(entityId);
@@ -1006,37 +1043,37 @@ async function getRamdomTip({ userId, categorySlug }) {
 }
 
 // app/routes/dashboard/tips.tsx
-async function loader5({ request }) {
-  let { userId } = await (0, import_ssr5.getAuth)(request);
+async function loader6({ request }) {
+  let { userId } = await (0, import_ssr6.getAuth)(request);
   if (!userId)
-    return (0, import_node5.redirect)("/sign-up");
+    return (0, import_node6.redirect)("/sign-up");
   let offset = getQueryIntParameter(request, "offset", 0), perPage = getQueryIntParameter(request, "per_page", 200), [total, plainTips, categories] = await Promise.all([
     countAllTipsByUser(userId),
     getAllTipsByUserPaging({ userId, offset, perPage }),
     getAllCategoriesByUser(userId)
   ]), tips = getTipsWithCategory({ tips: plainTips, categories });
-  return (0, import_node5.json)({ total, tips, categories, offset, perPage });
+  return (0, import_node6.json)({ total, tips, categories, offset, perPage });
 }
 async function action2({ request }) {
-  let { userId } = await (0, import_ssr5.getAuth)(request);
+  let { userId } = await (0, import_ssr6.getAuth)(request);
   if (!userId)
-    return (0, import_node5.redirect)("/sign-up");
+    return (0, import_node6.redirect)("/sign-up");
   let formData = await request.formData(), intent = formData.get("intent");
   if (intent === "create") {
     let description = formData.get("description"), categoryId = formData.get("categoryId"), tip = await createTip({ userId, categoryId, description });
-    return (0, import_node5.json)({ intent, tip });
+    return (0, import_node6.json)({ intent, tip });
   } else if (intent === "edit") {
     let entityId = formData.get("entityId"), description = formData.get("description"), categoryId = formData.get("categoryId"), tip = await updateTip({ entityId, description, categoryId });
-    return (0, import_node5.json)({ intent, tip });
+    return (0, import_node6.json)({ intent, tip });
   } else if (intent === "delete") {
     let entityId = formData.get("entityId");
     await deleteTip(entityId);
   }
-  return (0, import_node5.json)({ intent });
+  return (0, import_node6.json)({ intent });
 }
 function DashboardTipsRoute() {
-  let { total, tips, categories, offset, perPage } = (0, import_react18.useLoaderData)(), data = (0, import_react18.useActionData)(), { state } = (0, import_react18.useTransition)(), isSubmiting = state === "submitting", [showCreateModal, setShowCreateModal] = (0, import_react19.useState)(!1), [message, setMessage] = (0, import_react19.useState)(), [tipEdit, setTipEdit] = (0, import_react19.useState)(null), [tipDeleteId, setTipDeleteId] = (0, import_react19.useState)(null);
-  return (0, import_react19.useEffect)(() => {
+  let { total, tips, categories, offset, perPage } = (0, import_react19.useLoaderData)(), data = (0, import_react19.useActionData)(), { state } = (0, import_react19.useTransition)(), isSubmiting = state === "submitting", [showCreateModal, setShowCreateModal] = (0, import_react20.useState)(!1), [message, setMessage] = (0, import_react20.useState)(), [tipEdit, setTipEdit] = (0, import_react20.useState)(null), [tipDeleteId, setTipDeleteId] = (0, import_react20.useState)(null);
+  return (0, import_react20.useEffect)(() => {
     (data == null ? void 0 : data.intent) === "create" && (data == null ? void 0 : data.tip) ? (setShowCreateModal(!1), setMessage("Create success")) : (data == null ? void 0 : data.intent) === "edit" && (data == null ? void 0 : data.tip) ? (setTipEdit(null), setMessage("Update success")) : (data == null ? void 0 : data.intent) === "delete" && (setTipDeleteId(null), setMessage("Delete success"));
   }, [data]), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
     title: "Tips"
@@ -1109,43 +1146,44 @@ function SignUpRoute() {
 // app/routes/api/tips.ts
 var tips_exports2 = {};
 __export(tips_exports2, {
-  loader: () => loader6
+  loader: () => loader7
 });
-var import_node6 = require("@remix-run/node"), import_remix_utils = require("remix-utils");
-async function loader6({ request }) {
+var import_node7 = require("@remix-run/node"), import_remix_utils2 = require("remix-utils");
+async function loader7({ request }) {
   let apiKey = getQueryStringParameter(request, "api_key");
   if (!apiKey)
-    return (0, import_remix_utils.cors)(request, (0, import_node6.json)({ status: "forbidden", error: "Forbiden Access" }, { status: 403 }));
+    return (0, import_remix_utils2.cors)(request, (0, import_node7.json)({ status: "forbidden", error: "Forbiden Access" }, { status: 403 }));
   let userId = await getUserIdByApiKey(apiKey);
   if (!userId)
-    return (0, import_remix_utils.cors)(request, (0, import_node6.json)({ status: "bad_request", error: "Bad Request", apiKey }, { status: 400 }));
+    return (0, import_remix_utils2.cors)(request, (0, import_node7.json)({ status: "bad_request", error: "Bad Request", apiKey }, { status: 400 }));
+  await createStat(userId);
   let categorySlug = getQueryStringParameter(request, "category_slug"), tip = await getRamdomTip({ userId, categorySlug });
-  return (0, import_remix_utils.cors)(request, (0, import_node6.json)({ status: "ok", tip: (tip == null ? void 0 : tip.description) ?? null }));
+  return (0, import_remix_utils2.cors)(request, (0, import_node7.json)({ status: "ok", tip: (tip == null ? void 0 : tip.description) ?? null }));
 }
 
 // app/routes/index.tsx
 var routes_exports = {};
 __export(routes_exports, {
   default: () => IndexRoute,
-  loader: () => loader7
+  loader: () => loader8
 });
-var import_ssr6 = require("@clerk/remix/ssr.server"), import_node7 = require("@remix-run/node"), import_react20 = require("@remix-run/react");
-async function loader7({ request }) {
-  let { userId } = await (0, import_ssr6.getAuth)(request);
-  return userId ? (0, import_node7.redirect)("/dashboard") : null;
+var import_ssr7 = require("@clerk/remix/ssr.server"), import_node8 = require("@remix-run/node"), import_react21 = require("@remix-run/react");
+async function loader8({ request }) {
+  let { userId } = await (0, import_ssr7.getAuth)(request);
+  return userId ? (0, import_node8.redirect)("/dashboard") : null;
 }
 function IndexRoute() {
   return /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
-  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react20.Link, {
+  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react21.Link, {
     to: "/sign-in"
-  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react20.Link, {
+  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react21.Link, {
     to: "/sign-up"
   }, "Sign Up"));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "1a306f10", entry: { module: "/build/entry.client-IZWJTQY7.js", imports: ["/build/_shared/chunk-BOJHJ2SB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-SRS5XQGR.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/api/tips": { id: "routes/api/tips", parentId: "root", path: "api/tips", index: void 0, caseSensitive: void 0, module: "/build/routes/api/tips-WNGDHI5F.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-XICUXJ4O.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-NPL6OLPV.js", imports: ["/build/_shared/chunk-YNOL6KOU.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-MDPXN4AS.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-2TMKXMKH.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-Y5MIICPF.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-JGEPK6XE.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-BOGA3YCJ.js", imports: ["/build/_shared/chunk-YNOL6KOU.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SMCRJUVE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-HQU7QUII.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-LEI64YOW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-1A306F10.js" };
+var assets_manifest_default = { version: "d7b31ce8", entry: { module: "/build/entry.client-IZWJTQY7.js", imports: ["/build/_shared/chunk-BOJHJ2SB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-SRS5XQGR.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/api/tips": { id: "routes/api/tips", parentId: "root", path: "api/tips", index: void 0, caseSensitive: void 0, module: "/build/routes/api/tips-WNGDHI5F.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-XICUXJ4O.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-CQFX7O7Y.js", imports: ["/build/_shared/chunk-LO5FD6MR.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-MDPXN4AS.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-2TMKXMKH.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-Y5MIICPF.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-U74Z2ML3.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-OGSN7MXX.js", imports: ["/build/_shared/chunk-LO5FD6MR.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-SMCRJUVE.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-HQU7QUII.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-LEI64YOW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-D7B31CE8.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

@@ -10,8 +10,6 @@ type Props = {
 
 export default function LoadMore({ total, current, path, offset, perPage }: Props) {
 
-    console.log({ total, current, path, perPage, offset });
-
     if(current >= total) {
         return null;
     }

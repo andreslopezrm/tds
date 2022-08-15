@@ -12,7 +12,7 @@ type Props = {
 
 export function TipModalEdit({ tip, isSubmiting, categories, onClose }: Props) {
     const { categoryId, description } = tip;
-    console.log(categoryId);
+    
     return (
         <Modal onClose={onClose}>
                 <Form method="post" className="md:w-96">

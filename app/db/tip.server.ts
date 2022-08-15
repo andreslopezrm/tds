@@ -97,7 +97,6 @@ export async function getTipById(entityId: string): Promise<Tip> {
 
 export async function createTip({ userId, description, categoryId } : TipCreate) : Promise<Tip> {
     const repository = await getTipRepository();
-    console.log({ userId, description, categoryId, createAt: new Date() });
     return repository.createAndSave({ userId, description, categoryId, createAt: new Date() });
 }
 

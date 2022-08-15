@@ -1,6 +1,7 @@
 import { json, LoaderArgs, TypedResponse } from "@remix-run/node";
 import { cors } from "remix-utils";
 import { getUserIdByApiKey } from "~/db/apikey.server";
+import { createStat } from "~/db/stats.server";
 import { getRamdomTip } from "~/db/tip.server";
 import { getQueryStringParameter } from "~/utils/params.server";
 
@@ -17,7 +18,7 @@ export async function loader({ request }: LoaderArgs) {
     if(!userId) {
         return cors(request, json({ status: "bad_request", error: "Bad Request", apiKey }, { status: 400 }));
     }
-    
+    await createStat(userId);
     const categorySlug = getQueryStringParameter(request, "category_slug");
     const tip = await getRamdomTip({ userId, categorySlug });
     
