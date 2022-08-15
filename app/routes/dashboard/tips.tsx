@@ -9,7 +9,7 @@ import TipList from "~/components/tip-list";
 import TipModalCreate from "~/components/tip-modal-create";
 import { TipModalEdit } from "~/components/tip-modal-edit";
 import Toast from "~/components/toast";
-import { getallCategoriesByUser } from "~/db/category.server";
+import { getAllCategoriesByUser } from "~/db/category.server";
 import { countAllTipsByUser, createTip, deleteTip, getAllTipsByUser, getTipsWithCategory, Tip, updateTip } from "~/db/tip.server";
 import { getQueryIntParameter } from "~/utils/params.server";
 
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderArgs) {
     const [total, plainTips, categories] = await Promise.all([ 
         countAllTipsByUser(userId), 
         getAllTipsByUser({ userId, offset, perPage }), 
-        getallCategoriesByUser(userId) 
+        getAllCategoriesByUser(userId) 
     ]);
 
     const tips = getTipsWithCategory({ tips: plainTips, categories });

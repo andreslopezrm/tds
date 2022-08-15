@@ -66,7 +66,7 @@ export async function getAllCategoriesByUserPaging({ userId, offset = 0, perPage
             .page(offset, perPage);
 }
 
-export async function getallCategoriesByUser(userId: string) {
+export async function getAllCategoriesByUser(userId: string) {
     const repository = await getCategoryRepository();
     
     return repository.search()

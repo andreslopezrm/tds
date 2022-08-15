@@ -17,7 +17,7 @@ export function TipModalEdit({ tip, isSubmiting, categories, onClose }: Props) {
         <Modal onClose={onClose}>
                 <Form method="post" className="md:w-96">
                     <div>
-                        <label htmlFor="categoryId" className="block mb-2 text-sm font-medium text-gray-900">Categoryss {categoryId}</label>
+                        <label htmlFor="categoryId" className="block mb-2 text-sm font-medium text-gray-900">Category</label>
                         <select defaultValue={categoryId} id="categoryId" name="categoryId" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
                             <option value="">Choose a category</option>
                             {categories.map(({ entityId, name }) => (<option key={entityId} value={entityId}>{name}</option>))}

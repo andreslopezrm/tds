@@ -40,7 +40,7 @@ async function getTipRepository(): Promise<Repository<Tip>> {
 export async function getAllTipsByUser({ userId, offset = 0, perPage = 1}: TipSearch): Promise<Tip[]> {
     const repository = await getTipRepository();
 
-    return await repository.search()
+    return repository.search()
             .where("userId")
             .equals(userId)
             .sortDescending("createAt")
