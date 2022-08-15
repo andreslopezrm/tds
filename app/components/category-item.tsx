@@ -11,10 +11,10 @@ export default function CategoryItem({ category, onSelect, onDelete }: Props) {
     return (
         <tr className="bg-white border-b">
             <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                { name }
+                <p>{ name }</p>
             </th>
             <td className="py-4 px-6">
-                { slug }
+                <p>{ slug }</p>
             </td>
             <td className="py-4 px-6">
                 <div className="inline-flex gap-2 text-black">

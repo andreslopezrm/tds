@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/db/apikey.server", "browser-route-module:routes/dashboard/developer.tsx?browser", "../../../../app/routes/dashboard/developer.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/dashboard/developer.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { json, LoaderArgs, redirect } from \"@remix-run/node\";\nimport { useLoaderData } from \"@remix-run/react\";\nimport DashHeader from \"~/components/dash-header\";\nimport { ApiKey, getApiKeyByUser } from \"~/db/apikey.server\";\n\nexport async function loader({ request }: LoaderArgs) {\n    const { userId } = await getAuth(request);\n    \n    if(!userId) {\n        return redirect(\"/sign-up\");\n    }\n    const apiKey = await getApiKeyByUser(userId) as ApiKey;\n    return json({ apiKey });\n}\n\nexport default function DashboardDeveloperRoute() {\n\n    const { apiKey } = useLoaderData();\n\n    return (\n        <div>\n            <DashHeader title=\"Developer\" />\n            <p>{apiKey?.value}</p>\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AAAA,iBAAwB;AAExB;AAEA,oBAAwC;AAYzB,mCAAmC;AAE9C,QAAM,EAAE,WAAW;AAEnB,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA,MAClB,oCAAC,KAAD,MAAI,iCAAQ;AAAA;",
+  "names": []
+}

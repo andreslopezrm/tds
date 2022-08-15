@@ -69,7 +69,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_ssr = require("@clerk/remix/ssr.server"), import_remix = require("@clerk/remix"), import_remix2 = require("@clerk/remix");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-XRA4JQQI.css";
+var app_default = "/build/_assets/app-WPCSZFI6.css";
 
 // app/root.tsx
 function links() {
@@ -183,19 +183,43 @@ function DashNavbar() {
 }
 
 // app/db/user.server.ts
-var import_redis_om3 = require("redis-om");
+var import_redis_om4 = require("redis-om");
 
-// app/db/category.server.ts
-var import_slugify = __toESM(require("slugify")), import_redis_om2 = require("redis-om");
+// app/db/apikey.server.ts
+var import_redis_om2 = require("redis-om"), import_uuidv4 = require("uuidv4");
 
 // app/db/redis.server.ts
 var import_redis_om = require("redis-om"), redisClient = new import_redis_om.Client(), redisConnect = async () => {
   console.log("conctando"), redisClient.isOpen() || (console.log("...abriando conexion"), await redisClient.open(process.env.REDIS_URL));
 };
 
+// app/db/apikey.server.ts
+var ApiKey = class extends import_redis_om2.Entity {
+}, apiKeySchema = new import_redis_om2.Schema(ApiKey, {
+  userId: { type: "string", indexed: !0 },
+  value: { type: "string", indexed: !0 },
+  updateAt: { type: "date" }
+});
+async function getApiKeyRepository() {
+  await redisConnect();
+  let repository = redisClient.fetchRepository(apiKeySchema);
+  return await repository.createIndex(), repository;
+}
+function generateApiKeyValue() {
+  return `tip-land-${(0, import_uuidv4.uuid)()}-key`;
+}
+async function getApiKeyByUser(userId) {
+  return (await getApiKeyRepository()).search().where("userId").equals(userId).first();
+}
+async function createApiKey(userId) {
+  let repository = await getApiKeyRepository(), value = generateApiKeyValue();
+  return repository.createAndSave({ userId, value, updateAt: new Date() });
+}
+
 // app/db/category.server.ts
-var Category = class extends import_redis_om2.Entity {
-}, categorySchema = new import_redis_om2.Schema(Category, {
+var import_slugify = __toESM(require("slugify")), import_redis_om3 = require("redis-om");
+var Category = class extends import_redis_om3.Entity {
+}, categorySchema = new import_redis_om3.Schema(Category, {
   name: { type: "string" },
   slug: { type: "string", indexed: !0 },
   userId: { type: "string", indexed: !0 },
@@ -217,7 +241,7 @@ async function createCategory({ userId, name }) {
 async function getAllCategoriesByUserPaging({ userId, offset = 0, perPage = 1 }) {
   return (await getCategoryRepository()).search().where("userId").equals(userId).sortDescending("createAt").return.page(offset, perPage);
 }
-async function getallCategoriesByUser(userId) {
+async function getAllCategoriesByUser(userId) {
   return (await getCategoryRepository()).search().where("userId").equals(userId).sortDescending("createAt").all();
 }
 async function countAllCategoriesByUser(userId) {
@@ -241,8 +265,8 @@ async function deleteCategory(entityId) {
 }
 
 // app/db/user.server.ts
-var User = class extends import_redis_om3.Entity {
-}, userSchema = new import_redis_om3.Schema(User, {
+var User = class extends import_redis_om4.Entity {
+}, userSchema = new import_redis_om4.Schema(User, {
   clerkId: { type: "string" },
   provider: { type: "string" },
   active: { type: "boolean" },
@@ -259,11 +283,7 @@ async function checkUser(userId) {
     clerkId: userId,
     active: !0,
     createAt: new Date()
-  }), await createCategory({
-    userId,
-    name: "Default",
-    slug: "default"
-  }));
+  }), await createCategory({ userId, name: "Default" }), await createApiKey(userId));
 }
 
 // app/routes/dashboard.tsx
@@ -296,9 +316,9 @@ function CategoryItem({ category, onSelect, onDelete }) {
   }, /* @__PURE__ */ React.createElement("th", {
     scope: "row",
     className: "py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
-  }, name), /* @__PURE__ */ React.createElement("td", {
+  }, /* @__PURE__ */ React.createElement("p", null, name)), /* @__PURE__ */ React.createElement("td", {
     className: "py-4 px-6"
-  }, slug), /* @__PURE__ */ React.createElement("td", {
+  }, /* @__PURE__ */ React.createElement("p", null, slug)), /* @__PURE__ */ React.createElement("td", {
     className: "py-4 px-6"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "inline-flex gap-2 text-black"
@@ -601,11 +621,117 @@ function DashboardCategoryRoute() {
 // app/routes/dashboard/developer.tsx
 var developer_exports = {};
 __export(developer_exports, {
-  default: () => DashboardDeveloperRoute
+  default: () => DashboardDeveloperRoute,
+  loader: () => loader4
 });
+var import_ssr4 = require("@clerk/remix/ssr.server"), import_node4 = require("@remix-run/node"), import_react14 = require("@remix-run/react"), import_react15 = require("react");
+
+// app/components/developer-docs.tsx
+var import_react13 = require("react");
+function DeveloperDocs({ apiKeyShow, apiKeyHidden }) {
+  let [baseUrl, setBaseUrl] = (0, import_react13.useState)(""), endpointUrlShow = `${baseUrl}/api/tips?api_key=${apiKeyShow}`, endpointUrlHidden = `${baseUrl}/api/tips?api_key=${apiKeyHidden}`;
+  return (0, import_react13.useEffect)(() => {
+    setBaseUrl(window.location.origin);
+  }, []), /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("h2", {
+    className: "font-bold mt-6 text-xl"
+  }, "Endpoint"), /* @__PURE__ */ React.createElement("div", {
+    className: "overflow-x-auto relative mt-6"
+  }, /* @__PURE__ */ React.createElement("table", {
+    className: "w-full text-sm text-left text-gray-500 dark:text-gray-400"
+  }, /* @__PURE__ */ React.createElement("thead", {
+    className: "text-xs text-gray-700 uppercase bg-gray-50"
+  }, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", {
+    scope: "col",
+    className: "py-3 px-6"
+  }, "Parameter"), /* @__PURE__ */ React.createElement("th", {
+    scope: "col",
+    className: "py-3 px-6"
+  }, "Type"), /* @__PURE__ */ React.createElement("th", {
+    scope: "col",
+    className: "py-3 px-6"
+  }, "Required"))), /* @__PURE__ */ React.createElement("tbody", null, /* @__PURE__ */ React.createElement("tr", {
+    className: "bg-white border-b"
+  }, /* @__PURE__ */ React.createElement("th", {
+    scope: "row",
+    className: "py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+  }, /* @__PURE__ */ React.createElement("p", null, "api_key")), /* @__PURE__ */ React.createElement("td", {
+    className: "py-4 px-6"
+  }, /* @__PURE__ */ React.createElement("p", null, "string")), /* @__PURE__ */ React.createElement("td", {
+    className: "py-4 px-6"
+  }, /* @__PURE__ */ React.createElement("p", null, "Yes"))), /* @__PURE__ */ React.createElement("tr", {
+    className: "bg-white border-b"
+  }, /* @__PURE__ */ React.createElement("th", {
+    scope: "row",
+    className: "py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+  }, /* @__PURE__ */ React.createElement("p", null, "category_slug")), /* @__PURE__ */ React.createElement("td", {
+    className: "py-4 px-6"
+  }, /* @__PURE__ */ React.createElement("p", null, "string")), /* @__PURE__ */ React.createElement("td", {
+    className: "py-4 px-6"
+  }, /* @__PURE__ */ React.createElement("p", null, "No")))))), /* @__PURE__ */ React.createElement("p", {
+    className: "font-semibold mt-8"
+  }, "Usage example"), /* @__PURE__ */ React.createElement("div", {
+    className: "bg-gray-100 p-2 mt-2 rounded"
+  }, /* @__PURE__ */ React.createElement("a", {
+    className: "font-mono text-sm underline",
+    href: endpointUrlShow,
+    target: "_blank"
+  }, endpointUrlHidden)));
+}
+
+// app/components/developer-list.tsx
+function DeveloperList({ apiKey, visible, onToogleVisible }) {
+  return /* @__PURE__ */ React.createElement("div", {
+    className: "overflow-x-auto relative mt-6"
+  }, /* @__PURE__ */ React.createElement("table", {
+    className: "w-full text-sm text-left text-gray-500 dark:text-gray-400"
+  }, /* @__PURE__ */ React.createElement("thead", {
+    className: "text-xs text-gray-700 uppercase bg-gray-50"
+  }, /* @__PURE__ */ React.createElement("tr", null, /* @__PURE__ */ React.createElement("th", {
+    scope: "col",
+    className: "py-3 px-6"
+  }, "Api Key"), /* @__PURE__ */ React.createElement("th", {
+    scope: "col",
+    className: "py-3 px-6"
+  }, "Actions"))), /* @__PURE__ */ React.createElement("tbody", null, /* @__PURE__ */ React.createElement("tr", {
+    className: "bg-white border-b"
+  }, /* @__PURE__ */ React.createElement("th", {
+    scope: "row",
+    className: "py-4 px-6 font-medium text-gray-900 whitespace-nowrap"
+  }, /* @__PURE__ */ React.createElement("p", null, apiKey)), /* @__PURE__ */ React.createElement("td", {
+    className: "py-4 px-6"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "inline-flex gap-2 text-black"
+  }, /* @__PURE__ */ React.createElement("button", {
+    onClick: onToogleVisible,
+    className: "underline hover:opacity-80"
+  }, visible ? "Hidden" : "View"), /* @__PURE__ */ React.createElement("button", {
+    onClick: () => {
+    },
+    className: "hover:opacity-80"
+  }, "Refresh")))))));
+}
+
+// app/routes/dashboard/developer.tsx
+async function loader4({ request }) {
+  let { userId } = await (0, import_ssr4.getAuth)(request);
+  if (!userId)
+    return (0, import_node4.redirect)("/sign-up");
+  let apiKey = await getApiKeyByUser(userId);
+  return (0, import_node4.json)({ apiKey });
+}
 function DashboardDeveloperRoute() {
+  let { apiKey } = (0, import_react14.useLoaderData)(), [showApiKey, setShowApiKey] = (0, import_react15.useState)(!1), apiKeyValue = showApiKey ? apiKey == null ? void 0 : apiKey.value : "******************";
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
     title: "Developer"
+  }), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-4 font-light"
+  }, "To use the api rest of the tip of the day, send the value of your Api Key as a query parameter in the request"), /* @__PURE__ */ React.createElement(DeveloperList, {
+    apiKey: apiKeyValue,
+    visible: showApiKey,
+    onToogleVisible: () => setShowApiKey(!showApiKey)
+  }), /* @__PURE__ */ React.createElement(DeveloperDocs, {
+    apiKeyShow: apiKey == null ? void 0 : apiKey.value,
+    apiKeyHidden: apiKeyValue
   }));
 }
 
@@ -650,9 +776,9 @@ var tips_exports = {};
 __export(tips_exports, {
   action: () => action2,
   default: () => DashboardTipsRoute,
-  loader: () => loader4
+  loader: () => loader5
 });
-var import_ssr4 = require("@clerk/remix/ssr.server"), import_node4 = require("@remix-run/node"), import_react15 = require("@remix-run/react"), import_react16 = require("react");
+var import_ssr5 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react18 = require("@remix-run/react"), import_react19 = require("react");
 
 // app/components/tip-item.tsx
 function TipItem({ tip, onSelect, onDelete }) {
@@ -703,11 +829,11 @@ function TipList({ tips, onSelect, onDelete }) {
 }
 
 // app/components/tip-modal-create.tsx
-var import_react13 = require("@remix-run/react");
+var import_react16 = require("@remix-run/react");
 function TipModalCreate({ isSubmiting, categories, onClose }) {
   return /* @__PURE__ */ React.createElement(Modal, {
     onClose
-  }, /* @__PURE__ */ React.createElement(import_react13.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react16.Form, {
     method: "post",
     className: "md:w-96"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
@@ -753,12 +879,12 @@ function TipModalCreate({ isSubmiting, categories, onClose }) {
 }
 
 // app/components/tip-modal-edit.tsx
-var import_react14 = require("@remix-run/react");
+var import_react17 = require("@remix-run/react");
 function TipModalEdit({ tip, isSubmiting, categories, onClose }) {
   let { categoryId, description } = tip;
   return console.log(categoryId), /* @__PURE__ */ React.createElement(Modal, {
     onClose
-  }, /* @__PURE__ */ React.createElement(import_react14.Form, {
+  }, /* @__PURE__ */ React.createElement(import_react17.Form, {
     method: "post",
     className: "md:w-96"
   }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("label", {
@@ -805,9 +931,9 @@ function TipModalEdit({ tip, isSubmiting, categories, onClose }) {
 }
 
 // app/db/tip.server.ts
-var import_redis_om4 = require("redis-om");
-var Tip = class extends import_redis_om4.Entity {
-}, tipSchema = new import_redis_om4.Schema(Tip, {
+var import_redis_om5 = require("redis-om");
+var Tip = class extends import_redis_om5.Entity {
+}, tipSchema = new import_redis_om5.Schema(Tip, {
   description: { type: "string" },
   categoryId: { type: "string", indexed: !0 },
   userId: { type: "string", indexed: !0 },
@@ -819,7 +945,7 @@ async function getTipRepository() {
   return await repository.createIndex(), repository;
 }
 async function getAllTipsByUser({ userId, offset = 0, perPage = 1 }) {
-  return await (await getTipRepository()).search().where("userId").equals(userId).sortDescending("createAt").return.page(offset, perPage);
+  return (await getTipRepository()).search().where("userId").equals(userId).sortDescending("createAt").return.page(offset, perPage);
 }
 async function countAllTipsByUser(userId) {
   return (await getTipRepository()).search().where("userId").equals(userId).return.count();
@@ -850,37 +976,37 @@ async function deleteTip(entityId) {
 }
 
 // app/routes/dashboard/tips.tsx
-async function loader4({ request }) {
-  let { userId } = await (0, import_ssr4.getAuth)(request);
+async function loader5({ request }) {
+  let { userId } = await (0, import_ssr5.getAuth)(request);
   if (!userId)
-    return (0, import_node4.redirect)("/sign-up");
+    return (0, import_node5.redirect)("/sign-up");
   let offset = getQueryIntParameter(request, "offset", 0), perPage = getQueryIntParameter(request, "per_page", 200), [total, plainTips, categories] = await Promise.all([
     countAllTipsByUser(userId),
     getAllTipsByUser({ userId, offset, perPage }),
-    getallCategoriesByUser(userId)
+    getAllCategoriesByUser(userId)
   ]), tips = getTipsWithCategory({ tips: plainTips, categories });
-  return (0, import_node4.json)({ total, tips, categories, offset, perPage });
+  return (0, import_node5.json)({ total, tips, categories, offset, perPage });
 }
 async function action2({ request }) {
-  let { userId } = await (0, import_ssr4.getAuth)(request);
+  let { userId } = await (0, import_ssr5.getAuth)(request);
   if (!userId)
-    return (0, import_node4.redirect)("/sign-up");
+    return (0, import_node5.redirect)("/sign-up");
   let formData = await request.formData(), intent = formData.get("intent");
   if (intent === "create") {
     let description = formData.get("description"), categoryId = formData.get("categoryId"), tip = await createTip({ userId, categoryId, description });
-    return (0, import_node4.json)({ intent, tip });
+    return (0, import_node5.json)({ intent, tip });
   } else if (intent === "edit") {
     let entityId = formData.get("entityId"), description = formData.get("description"), categoryId = formData.get("categoryId"), tip = await updateTip({ entityId, description, categoryId });
-    return (0, import_node4.json)({ intent, tip });
+    return (0, import_node5.json)({ intent, tip });
   } else if (intent === "delete") {
     let entityId = formData.get("entityId");
     await deleteTip(entityId);
   }
-  return (0, import_node4.json)({ intent });
+  return (0, import_node5.json)({ intent });
 }
 function DashboardTipsRoute() {
-  let { total, tips, categories, offset, perPage } = (0, import_react15.useLoaderData)(), data = (0, import_react15.useActionData)(), { state } = (0, import_react15.useTransition)(), isSubmiting = state === "submitting", [showCreateModal, setShowCreateModal] = (0, import_react16.useState)(!1), [message, setMessage] = (0, import_react16.useState)(), [tipEdit, setTipEdit] = (0, import_react16.useState)(null), [tipDeleteId, setTipDeleteId] = (0, import_react16.useState)(null);
-  return (0, import_react16.useEffect)(() => {
+  let { total, tips, categories, offset, perPage } = (0, import_react18.useLoaderData)(), data = (0, import_react18.useActionData)(), { state } = (0, import_react18.useTransition)(), isSubmiting = state === "submitting", [showCreateModal, setShowCreateModal] = (0, import_react19.useState)(!1), [message, setMessage] = (0, import_react19.useState)(), [tipEdit, setTipEdit] = (0, import_react19.useState)(null), [tipDeleteId, setTipDeleteId] = (0, import_react19.useState)(null);
+  return (0, import_react19.useEffect)(() => {
     (data == null ? void 0 : data.intent) === "create" && (data == null ? void 0 : data.tip) ? (setShowCreateModal(!1), setMessage("Create success")) : (data == null ? void 0 : data.intent) === "edit" && (data == null ? void 0 : data.tip) ? (setTipEdit(null), setMessage("Update success")) : (data == null ? void 0 : data.intent) === "delete" && (setTipDeleteId(null), setMessage("Delete success"));
   }, [data]), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement(DashHeader, {
     title: "Tips"
@@ -954,25 +1080,25 @@ function SignUpRoute() {
 var routes_exports = {};
 __export(routes_exports, {
   default: () => IndexRoute,
-  loader: () => loader5
+  loader: () => loader6
 });
-var import_ssr5 = require("@clerk/remix/ssr.server"), import_node5 = require("@remix-run/node"), import_react17 = require("@remix-run/react");
-async function loader5({ request }) {
-  let { userId } = await (0, import_ssr5.getAuth)(request);
-  return userId ? (0, import_node5.redirect)("/dashboard") : null;
+var import_ssr6 = require("@clerk/remix/ssr.server"), import_node6 = require("@remix-run/node"), import_react20 = require("@remix-run/react");
+async function loader6({ request }) {
+  let { userId } = await (0, import_ssr6.getAuth)(request);
+  return userId ? (0, import_node6.redirect)("/dashboard") : null;
 }
 function IndexRoute() {
   return /* @__PURE__ */ React.createElement("div", {
     style: { fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }
-  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react17.Link, {
+  }, /* @__PURE__ */ React.createElement("h1", null, "Datos"), /* @__PURE__ */ React.createElement(import_react20.Link, {
     to: "/sign-in"
-  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react17.Link, {
+  }, "Sign In"), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement("br", null), /* @__PURE__ */ React.createElement(import_react20.Link, {
     to: "/sign-up"
   }, "Sign Up"));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "7b4f598f", entry: { module: "/build/entry.client-MS4ASGL3.js", imports: ["/build/_shared/chunk-47DFYYCO.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-7RGXOEIF.js", imports: ["/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-IQ3SJO2W.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-K73Y5DYW.js", imports: ["/build/_shared/chunk-ANU5HILP.js", "/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-2W7FI2RZ.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-PRWOKER7.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-OHBXYUUX.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-NNW3JFGC.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-7QBXZDXO.js", imports: ["/build/_shared/chunk-ANU5HILP.js", "/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-U5ZQKLXC.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-NFOEHZBB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-JZIR4BBJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-7B4F598F.js" };
+var assets_manifest_default = { version: "6fea0f70", entry: { module: "/build/entry.client-MS4ASGL3.js", imports: ["/build/_shared/chunk-47DFYYCO.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-ROXNMFMO.js", imports: ["/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-IQ3SJO2W.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-37PM7HVN.js", imports: ["/build/_shared/chunk-ANU5HILP.js", "/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-OFTHXKSU.js", imports: ["/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-PRWOKER7.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-OHBXYUUX.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-NNW3JFGC.js", imports: ["/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-WLAFHKV7.js", imports: ["/build/_shared/chunk-ANU5HILP.js", "/build/_shared/chunk-NEJG427H.js", "/build/_shared/chunk-7Q46JD7Y.js", "/build/_shared/chunk-FRO2JKJQ.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-U5ZQKLXC.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-NFOEHZBB.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-JZIR4BBJ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-6FEA0F70.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

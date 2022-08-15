@@ -13,7 +13,7 @@ export class ApiKey extends Entity {}
 const apiKeySchema = new Schema(ApiKey, {
     userId: { type: "string", indexed: true },
     value: { type: "string", indexed: true },
-    updateAt: { type: "string" }
+    updateAt: { type: "date" }
 });
 
 

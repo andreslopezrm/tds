@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/developer.tsx?browser", "../../../../app/routes/dashboard/developer.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/developer.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { json, LoaderArgs, redirect } from \"@remix-run/node\";\nimport DashHeader from \"~/components/dash-header\";\n\nexport async function loader({ request }: LoaderArgs) {\n    const { userId } = await getAuth(request);\n    \n    if(!userId) {\n        return redirect(\"/sign-up\");\n    }\n    \n    return json({ });\n}\n\nexport default function DashboardDeveloperRoute() {\n    return (\n        <div>\n            <DashHeader title=\"Developer\" />\n\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;;;;AAAA;;;ACAA;AAAA,iBAAwB;AAcT,mCAAmC;AAC9C,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

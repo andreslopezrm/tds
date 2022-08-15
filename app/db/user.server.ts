@@ -1,4 +1,5 @@
 import { Entity, Schema } from "redis-om";
+import { createApiKey } from "./apikey.server";
 import { createCategory } from "./category.server";
 import { redisClient, redisConnect } from "./redis.server";
 
@@ -34,10 +35,7 @@ export async function checkUser(userId: string) {
             createAt: new Date()
         });
 
-        await createCategory({
-            userId,
-            name: "Default",
-            slug: "default"
-        });
+        await createCategory({ userId, name: "Default" });
+        await createApiKey(userId);
     }
 }
