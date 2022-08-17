@@ -54,12 +54,18 @@ export async function getStatsInWeek(userId: string) {
     const now = dayjs();
     const oneDaysAgo = now.subtract(1, "day");
     const twoDaysAgo = now.subtract(2, "day");
+    const threeDaysAgo = now.subtract(3, "day");
+    const fourDaysAgo = now.subtract(4, "day");
+    const fiveDaysAgo = now.subtract(5, "day");
 
     const nowFormat = now.format(FORMAT);
     const oneDaysAgoFormat = oneDaysAgo.format(FORMAT);
     const twoDaysAgoFormat = twoDaysAgo.format(FORMAT);
+    const threeDaysAgoFormat = threeDaysAgo.format(FORMAT);
+    const fourDaysAgoFormat = fourDaysAgo.format(FORMAT);
+    const fiveDaysAgoFormat = fourDaysAgo.format(FORMAT);
 
-    const dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat];
+    const dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat, threeDaysAgoFormat, fourDaysAgoFormat, fiveDaysAgoFormat].reverse();
     
     const stats = await repository.search()
                     .where("userId")
@@ -70,6 +76,12 @@ export async function getStatsInWeek(userId: string) {
                     .equals(oneDaysAgoFormat)
                     .or("createAt")
                     .equals(twoDaysAgoFormat)
+                    .or("createAt")
+                    .equals(threeDaysAgoFormat)
+                    .or("createAt")
+                    .equals(fourDaysAgoFormat)
+                    .or("createAt")
+                    .equals(fiveDaysAgoFormat)
                     .all();
 
     return dates.map(date => (

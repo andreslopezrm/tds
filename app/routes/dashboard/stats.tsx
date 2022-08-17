@@ -50,7 +50,10 @@ export default function DashboardStatsRoute() {
     return (
         <div>
             <DashHeader title="Stats" />
-            <Bar options={options} data={data} />
+            <p className="font-light">Total request per day</p>
+            <div className="max-w-3xl m-auto mt-6">
+                <Bar options={options} data={data} />
+            </div>
         </div>
     );
 }
