@@ -1,5 +1,6 @@
 import { Entity, Repository, Schema } from "redis-om";
 import { redisClient, redisConnect } from "./redis.server";
+import dayjs from "dayjs";
 
 export interface Stat {
     userId: string;
@@ -26,25 +27,51 @@ async function getStatRepository(): Promise<Repository<Stat>> {
 export async function createStat(userId: string) {
     const repository = await getStatRepository();
     
-    const createAt = new Date();
-    createAt.setHours(0,0,0);
-    //return repository.createAndSave({ userId, createAt });
+    const now = dayjs();
+    now.hour(0);
+    now.minute(0);
+    now.second(0);
+    now.millisecond(0);
+
+    const createAt = now.toDate();
+
+    const existToday = await repository.search()
+                        .where("createAt")
+                        .equals(createAt)
+                        .first();
+
+    if(existToday) {
+        existToday.count = (existToday.count === undefined || existToday.count === null) ? 0 : existToday.count + 1;
+        repository.save(existToday);
+        return existToday;
+    }
+
+    return repository.createAndSave({ userId, createAt, count: 0 });
 }
 
 export async function getStatsInWeek(userId: string) {
     const repository = await getStatRepository();
     
-    const now = new Date();
-    now.setHours(0,0,0);
+    const now = dayjs();
+    now.hour(0);
+    now.minute(0);
+    now.second(0);
+    now.millisecond(0);
 
-    const sevenDaysAgo = new Date((+now) - (5*86400000));
+    const oneDaysAgo = now.subtract(1, "day");
+    const twoDaysAgo = now.subtract(2, "day");
 
     const stats = await repository.search()
                     .where("userId")
                     .equals(userId)
                     .where("createAt")
-                    .between(sevenDaysAgo, now)
+                    .between(twoDaysAgo.toDate(), now.toDate())
                     .all();
 
-    return stats;
+    return [now, oneDaysAgo, twoDaysAgo].map(date => (
+        {
+            date: date.format('DD MMM YYYY'),
+            count: stats.find(stat => stat.createAt == date.toDate())?.count ?? 0
+        }
+    ));
 }

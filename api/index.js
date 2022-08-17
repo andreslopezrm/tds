@@ -777,7 +777,7 @@ var import_ssr5 = require("@clerk/remix/ssr.server"), import_node5 = require("@r
 
 // app/db/stats.server.ts
 var import_redis_om5 = require("redis-om");
-var Stat = class extends import_redis_om5.Entity {
+var import_dayjs = __toESM(require("dayjs")), Stat = class extends import_redis_om5.Entity {
 }, statSchema = new import_redis_om5.Schema(Stat, {
   userId: { type: "string", indexed: !0 },
   createAt: { type: "date", indexed: !0 },
@@ -789,16 +789,16 @@ async function getStatRepository() {
   return await repository.createIndex(), repository;
 }
 async function createStat(userId) {
-  let repository = await getStatRepository();
-  new Date().setHours(0, 0, 0);
-  let ids = await repository.search().allIds();
-  await repository.remove(ids);
+  let repository = await getStatRepository(), now = (0, import_dayjs.default)();
+  now.hour(0), now.minute(0), now.second(0), now.millisecond(0);
+  let createAt = now.toDate(), existToday = await repository.search().where("createAt").equals(createAt).first();
+  return existToday ? (existToday.count = existToday.count === void 0 || existToday.count === null ? 0 : existToday.count + 1, repository.save(existToday), existToday) : repository.createAndSave({ userId, createAt, count: 0 });
 }
 async function getStatsInWeek(userId) {
-  let repository = await getStatRepository(), now = new Date();
-  now.setHours(0, 0, 0);
-  let sevenDaysAgo = new Date(+now - 5 * 864e5);
-  return await repository.search().where("userId").equals(userId).where("createAt").between(sevenDaysAgo, now).all();
+  let repository = await getStatRepository(), now = (0, import_dayjs.default)();
+  now.hour(0), now.minute(0), now.second(0), now.millisecond(0);
+  let oneDaysAgo = now.subtract(1, "day"), twoDaysAgo = now.subtract(2, "day");
+  return await repository.search().where("userId").equals(userId).where("createAt").between(twoDaysAgo.toDate(), now.toDate()).all();
 }
 
 // app/routes/dashboard/stats.tsx
