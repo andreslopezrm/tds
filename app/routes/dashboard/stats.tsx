@@ -1,12 +1,13 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { json, LoaderArgs, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { LineChart, Line } from "recharts";
-import { ClientOnly } from "remix-utils";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import DashHeader from "~/components/dash-header";
 import { getStatsInWeek } from "~/db/stats.server";
 
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+  
 export async function loader({ request }: LoaderArgs) {
     const { userId } = await getAuth(request);
     
@@ -17,28 +18,39 @@ export async function loader({ request }: LoaderArgs) {
     return json({ stats });
 }
 
-
-
-
-
 export default function DashboardStatsRoute() {
-    const data1 = useLoaderData();
-    const data = [{name: 'Page A', uv: 400, pv: 2400, amt: 2400}];
-    const [show, setShow] = useState(false);
+    const { stats } = useLoaderData<{stats: {date: string, count: number }[]}>();
+
+    const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top' as const,
+          },
+          title: {
+            display: true,
+            text: 'Stats',
+          },
+        },
+    };
+
+    const labels = stats.map(({ date }) => date);
     
-    useEffect(() => {
-        setShow(true);
-    }, []);
+    const data = {
+        labels,
+        datasets: [
+          {
+            label: 'Day',
+            data: stats.map(({ count }) => count),
+            backgroundColor: '#000',
+          }
+        ],
+    };
     
     return (
         <div>
             <DashHeader title="Stats" />
-            
-             {
-                show && <LineChart width={400} height={400} data={data}>
-                    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                </LineChart>
-             }   
+            <Bar options={options} data={data} />
         </div>
     );
 }
