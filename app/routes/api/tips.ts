@@ -16,7 +16,7 @@ export async function loader({ request }: LoaderArgs) {
     const userId = await getUserIdByApiKey(apiKey);
 
     if(!userId) {
-        return cors(request, json({ status: "bad_request", error: "Bad Request", apiKey }, { status: 400 }));
+        return cors(request, json({ status: "forbidden", error: "Forbiden Access", apiKey }, { status: 403 }));
     }
     await createStat(userId);
     const categorySlug = getQueryStringParameter(request, "category_slug");

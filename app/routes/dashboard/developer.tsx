@@ -1,11 +1,11 @@
 import { getAuth } from "@clerk/remix/ssr.server";
-import { json, LoaderArgs, redirect } from "@remix-run/node";
+import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import DashHeader from "~/components/dash-header";
 import DeveloperDocs from "~/components/developer-docs";
 import DeveloperList from "~/components/developer-list";
-import { ApiKey, getApiKeyByUser } from "~/db/apikey.server";
+import { ApiKey, getApiKeyByUser, updateApiKey } from "~/db/apikey.server";
 
 export async function loader({ request }: LoaderArgs) {
     const { userId } = await getAuth(request);
@@ -15,6 +15,17 @@ export async function loader({ request }: LoaderArgs) {
     }
     const apiKey = await getApiKeyByUser(userId) as ApiKey;
     return json({ apiKey });
+}
+
+export async function action({ request }: ActionArgs) {
+    const { userId } = await getAuth(request);
+
+    if(!userId) {
+        return redirect("/sign-up");
+    }
+
+    await updateApiKey(userId);
+    return json({ updated: true });
 }
 
 export default function DashboardDeveloperRoute() {

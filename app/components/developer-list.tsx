@@ -1,3 +1,5 @@
+import { Form } from "@remix-run/react";
+
 type Props = {
     apiKey: string | null;
     visible: boolean;
@@ -28,7 +30,9 @@ export default function DeveloperList({ apiKey, visible, onToogleVisible }: Prop
                                 <button onClick={onToogleVisible} className="underline hover:opacity-80">
                                     { visible ? "Hidden" : "View" }
                                 </button>
-                                <button onClick={() => {}} className="hover:opacity-80">Refresh</button>
+                                <Form method="post">
+                                    <button type="submit" className="hover:opacity-80">Refresh</button>
+                                </Form>
                             </div>
                         </td>
                     </tr>
