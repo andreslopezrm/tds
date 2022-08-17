@@ -1,7 +1,7 @@
 import { getAuth } from "@clerk/remix/ssr.server";
-import { LoaderArgs, redirect } from "@remix-run/node";
+import { json, LoaderArgs, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { json } from "remix-utils";
+import { LineChart, Line } from "recharts";
 import DashHeader from "~/components/dash-header";
 import { getStatsInWeek } from "~/db/stats.server";
 
@@ -18,8 +18,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function DashboardStatsRoute() {
     const data = useLoaderData();
-    console.log(data);
-
+    
     return (
         <div>
             <DashHeader title="Stats" />

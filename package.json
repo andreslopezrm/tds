@@ -16,6 +16,7 @@
     "dayjs": "^1.11.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "recharts": "^2.1.13",
     "redis-om": "^0.3.6",
     "remix-utils": "^3.3.0",
     "slugify": "^1.6.5",

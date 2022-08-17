@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["empty-module:~/db/stats.server", "browser-route-module:routes/dashboard/stats.tsx?browser", "../../../../app/routes/dashboard/stats.tsx"],
+  "sourcesContent": ["module.exports = {};", "export { default } from \"./routes/dashboard/stats.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { json, LoaderArgs, redirect } from \"@remix-run/node\";\nimport { useLoaderData } from \"@remix-run/react\";\nimport { LineChart, Line } from \"recharts\";\nimport DashHeader from \"~/components/dash-header\";\nimport { getStatsInWeek } from \"~/db/stats.server\";\n\nexport async function loader({ request }: LoaderArgs) {\n    const { userId } = await getAuth(request);\n    \n    if(!userId) {\n        return redirect(\"/sign-up\");\n    }\n    const stats = await getStatsInWeek(userId);\n    return json({ stats });\n}\n\n\nexport default function DashboardStatsRoute() {\n    const data = useLoaderData();\n    \n    return (\n        <div>\n            <DashHeader title=\"Stats\" />\n        </div>\n    );\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,WAAO,UAAU;AAAA;AAAA;;;ACAjB;;;ACAA;AAAA,iBAAwB;AAExB;AAGA,mBAA+B;AAahB,+BAA+B;AAC1C,QAAM,OAAO;AAEb,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA;AAAA;",
+  "names": []
+}

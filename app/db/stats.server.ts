@@ -2,9 +2,11 @@ import { Entity, Repository, Schema } from "redis-om";
 import { redisClient, redisConnect } from "./redis.server";
 import dayjs from "dayjs";
 
+const FORMAT = "DD-MM-YYYY";
+
 export interface Stat {
     userId: string;
-    createAt: Date;
+    createAt: string;
     count: number;
 }
 
@@ -12,7 +14,7 @@ export class Stat extends Entity {}
 
 const statSchema = new Schema(Stat, {
     userId: { type: "string", indexed: true },
-    createAt: { type: "date", indexed: true },
+    createAt: { type: "string", indexed: true },
     count: { type: "number" }
 });
 
@@ -28,50 +30,52 @@ export async function createStat(userId: string) {
     const repository = await getStatRepository();
     
     const now = dayjs();
-    now.hour(0);
-    now.minute(0);
-    now.second(0);
-    now.millisecond(0);
-
-    const createAt = now.toDate();
+    const createAt = now.format(FORMAT);
 
     const existToday = await repository.search()
                         .where("createAt")
                         .equals(createAt)
                         .first();
+    
 
     if(existToday) {
         existToday.count = (existToday.count === undefined || existToday.count === null) ? 0 : existToday.count + 1;
         repository.save(existToday);
         return existToday;
     }
-
-    return repository.createAndSave({ userId, createAt, count: 0 });
+    
+    const stat = await repository.createAndSave({ userId, createAt, count: 1 });
+    return stat;
 }
 
 export async function getStatsInWeek(userId: string) {
     const repository = await getStatRepository();
     
     const now = dayjs();
-    now.hour(0);
-    now.minute(0);
-    now.second(0);
-    now.millisecond(0);
-
     const oneDaysAgo = now.subtract(1, "day");
     const twoDaysAgo = now.subtract(2, "day");
 
+    const nowFormat = now.format(FORMAT);
+    const oneDaysAgoFormat = oneDaysAgo.format(FORMAT);
+    const twoDaysAgoFormat = twoDaysAgo.format(FORMAT);
+
+    const dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat];
+    
     const stats = await repository.search()
                     .where("userId")
                     .equals(userId)
                     .where("createAt")
-                    .between(twoDaysAgo.toDate(), now.toDate())
+                    .equal(nowFormat)
+                    .or("createAt")
+                    .equals(oneDaysAgoFormat)
+                    .or("createAt")
+                    .equals(twoDaysAgoFormat)
                     .all();
 
-    return [now, oneDaysAgo, twoDaysAgo].map(date => (
+    return dates.map(date => (
         {
-            date: date.format('DD MMM YYYY'),
-            count: stats.find(stat => stat.createAt == date.toDate())?.count ?? 0
+            date,
+            count: stats.find(stat => stat.createAt == date)?.count ?? 0
         }
     ));
 }
