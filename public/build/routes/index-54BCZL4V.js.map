@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/index.tsx\";", "import { getAuth } from \"@clerk/remix/ssr.server\";\nimport { LoaderArgs, redirect } from \"@remix-run/node\";\nimport { Link } from \"@remix-run/react\";\n\nexport async function loader({ request }: LoaderArgs) {\n  const { userId } = await getAuth(request);\n\n  if(userId) {\n    return redirect(\"/dashboard\");\n  }\n  \n  return null;\n}\n\nexport default function IndexRoute() {\n  \n  return (\n    <div>\n     <h1>Datos</h1>\n\n      {/* <Link to=\"/sign-in\">Sign In</Link>\n      <Link to=\"/sign-up\">Sign Up</Link> */}\n    </div>\n  );\n}\n"],
+  "mappings": ";;;;;;;;;;AAAA;;;ACAA;AAAA,iBAAwB;AAcT,sBAAsB;AAEnC,SACE,oCAAC,OAAD,MACC,oCAAC,MAAD,MAAI;AAAA;",
+  "names": []
+}

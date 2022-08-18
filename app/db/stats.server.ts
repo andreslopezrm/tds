@@ -63,7 +63,7 @@ export async function getStatsInWeek(userId: string) {
     const twoDaysAgoFormat = twoDaysAgo.format(FORMAT);
     const threeDaysAgoFormat = threeDaysAgo.format(FORMAT);
     const fourDaysAgoFormat = fourDaysAgo.format(FORMAT);
-    const fiveDaysAgoFormat = fourDaysAgo.format(FORMAT);
+    const fiveDaysAgoFormat = fiveDaysAgo.format(FORMAT);
 
     const dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat, threeDaysAgoFormat, fourDaysAgoFormat, fiveDaysAgoFormat].reverse();
     
