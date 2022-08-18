@@ -69,7 +69,7 @@ __export(root_exports, {
 var import_react2 = require("@remix-run/react"), import_ssr = require("@clerk/remix/ssr.server"), import_remix = require("@clerk/remix"), import_remix2 = require("@clerk/remix");
 
 // app/styles/app.css
-var app_default = "/build/_assets/app-JCEUN6FH.css";
+var app_default = "/build/_assets/app-UVLEFHQZ.css";
 
 // app/root.tsx
 function links() {
@@ -1212,18 +1212,13 @@ async function loader7({ request }) {
   return (0, import_remix_utils.cors)(request, (0, import_node7.json)({ status: "ok", tip: (tip == null ? void 0 : tip.description) ?? null }));
 }
 
-// app/routes/index.tsx
-var routes_exports = {};
-__export(routes_exports, {
-  default: () => IndexRoute,
-  loader: () => loader8
+// app/routes/about.tsx
+var about_exports = {};
+__export(about_exports, {
+  default: () => AboutRoute
 });
-var import_ssr7 = require("@clerk/remix/ssr.server"), import_node8 = require("@remix-run/node"), import_react22 = require("@remix-run/react");
-async function loader8({ request }) {
-  let { userId } = await (0, import_ssr7.getAuth)(request);
-  return userId ? (0, import_node8.redirect)("/dashboard") : null;
-}
-function IndexRoute() {
+var import_react22 = require("@remix-run/react");
+function AboutRoute() {
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("nav", {
     className: "bg-white h-16 fixed top-0 left-0 right-0 flex justify-between items-center border-b border-slate-200 border-solid z-10"
   }, /* @__PURE__ */ React.createElement("div", {
@@ -1246,7 +1241,44 @@ function IndexRoute() {
   }, "Sign In"), /* @__PURE__ */ React.createElement(import_react22.Link, {
     className: "bg-black text-white rounded px-4 py-2 border border-solid border-black hover:bg-white hover:text-black",
     to: "sign-up"
-  }, "Sign Up"))), /* @__PURE__ */ React.createElement("section", {
+  }, "Sign Up"))));
+}
+
+// app/routes/index.tsx
+var routes_exports = {};
+__export(routes_exports, {
+  default: () => IndexRoute,
+  loader: () => loader8
+});
+var import_ssr7 = require("@clerk/remix/ssr.server"), import_node8 = require("@remix-run/node"), import_react23 = require("@remix-run/react");
+async function loader8({ request }) {
+  let { userId } = await (0, import_ssr7.getAuth)(request);
+  return userId ? (0, import_node8.redirect)("/dashboard") : null;
+}
+function IndexRoute() {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("nav", {
+    className: "bg-white h-16 fixed top-0 left-0 right-0 flex justify-between items-center border-b border-slate-200 border-solid z-10"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "flex items-center gap-2 ml-4"
+  }, /* @__PURE__ */ React.createElement(import_react23.Link, {
+    to: "/"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/forest.png",
+    alt: "logo",
+    className: "w-10 h-10"
+  })), /* @__PURE__ */ React.createElement(import_react23.Link, {
+    to: "/"
+  }, /* @__PURE__ */ React.createElement("span", {
+    className: "font-bold"
+  }, "TipLand"))), /* @__PURE__ */ React.createElement("div", {
+    className: "mr-4 flex gap-6 text-sm items-center"
+  }, /* @__PURE__ */ React.createElement(import_react23.Link, {
+    to: "sign-in",
+    className: "text-slate-600"
+  }, "Sign In"), /* @__PURE__ */ React.createElement(import_react23.Link, {
+    className: "bg-black text-white rounded px-4 py-2 border border-solid border-black hover:bg-white hover:text-black",
+    to: "sign-up"
+  }, "Sign Up"))), /* @__PURE__ */ React.createElement("div", {
     className: "container m-0 mx-auto p-8 md:p-8"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "mt-14 md:mt-24"
@@ -1256,21 +1288,105 @@ function IndexRoute() {
     className: "text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-500"
   }, "Tip Land"), " the SaaS platform for the Tip of the day"), /* @__PURE__ */ React.createElement("p", {
     className: "mt-8 text-2xl text-gray-700 font-extralight md:text-3xl md:w-9/12 md:mt-12"
-  }, "The easy integration platform to offer users the advice that will help them to better use your product."), /* @__PURE__ */ React.createElement("div", {
+  }, "The easy integration platform to offer users the advice that will help them to better use your product."), /* @__PURE__ */ React.createElement("section", {
     className: "mt-12"
   }, /* @__PURE__ */ React.createElement("div", {
     className: "mt-8 flex gap-4"
-  }, /* @__PURE__ */ React.createElement(import_react22.Link, {
+  }, /* @__PURE__ */ React.createElement(import_react23.Link, {
     to: "/sign-up",
     className: "text-white bg-gradient-to-r from-black to-neutral-900 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2 md:px-12 md:py-5"
-  }, "Get starter"), /* @__PURE__ */ React.createElement(import_react22.Link, {
+  }, "Get starter"), /* @__PURE__ */ React.createElement(import_react23.Link, {
     to: "/about",
     className: "text-black hover:text-zinc-800 border border-black hover:bg-zinc-50 focus:ring-4 focus:outline-none focus:ring-zinc-700 font-medium rounded-lg text-xl px-5 py-2.5 text-center mr-2 mb-2 md:px-12 md:py-5"
-  }, "About"))), /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("h3", null, "Start creating tips"), /* @__PURE__ */ React.createElement("h5", null, "Categories"), /* @__PURE__ */ React.createElement("p", null, "The tips of the day are segmented by categories which can be used by product, type of customers or applications"), /* @__PURE__ */ React.createElement("h5", null, "Ramdom"), /* @__PURE__ */ React.createElement("p", null, "Each tip requested via rest api is by default random"), /* @__PURE__ */ React.createElement("h5", null, "Social"), /* @__PURE__ */ React.createElement("p", null, "Sign in easily via Google, Github or email"), /* @__PURE__ */ React.createElement("h3", null, "Developer Focused"), /* @__PURE__ */ React.createElement("h5", null, "API KEY"), /* @__PURE__ */ React.createElement("p", null, "Get your api key to query through the Rest API"), /* @__PURE__ */ React.createElement("h5", null, "Statistics"), /* @__PURE__ */ React.createElement("p", null, "Check the total number of requests in the last days"), /* @__PURE__ */ React.createElement("h6", null, "Privacy"), /* @__PURE__ */ React.createElement("p", null, "You can change the assigned API Key in the developer section")))));
+  }, "About"))), /* @__PURE__ */ React.createElement("section", {
+    className: "mt-12 md:mt-24"
+  }, /* @__PURE__ */ React.createElement("h3", {
+    className: "font-extrabold text-3xl mb-12 md:text-5xl"
+  }, "Start creating tips"), /* @__PURE__ */ React.createElement("div", {
+    className: "md:flex md:gap-8"
+  }, /* @__PURE__ */ React.createElement("figure", {
+    className: "flex-1"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/tips.png",
+    alt: "tips",
+    className: "max-w-full h-auto"
+  })), /* @__PURE__ */ React.createElement("div", {
+    className: "flex-1"
+  }, /* @__PURE__ */ React.createElement("h5", {
+    className: "font-bold text-2xl"
+  }, "Categories"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "The tips of the day are segmented by categories which can be used by product, type of customers or applications"), /* @__PURE__ */ React.createElement("h5", {
+    className: "font-bold text-2xl mt-6"
+  }, "Ramdom"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "Each tip requested via rest api is by default random"), /* @__PURE__ */ React.createElement("h5", {
+    className: "font-bold text-2xl mt-6"
+  }, "Social"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "Sign in easily via Google, Github or email")))), /* @__PURE__ */ React.createElement("section", {
+    className: "mt-12 md:mt-24"
+  }, /* @__PURE__ */ React.createElement("h3", {
+    className: "font-extrabold text-3xl mb-12 md:text-5xl"
+  }, "Developer Focused"), /* @__PURE__ */ React.createElement("div", {
+    className: "md:flex md:gap-8"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "flex-1"
+  }, /* @__PURE__ */ React.createElement("h5", {
+    className: "font-bold text-2xl"
+  }, "API Key"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "Get your API key to query through the API Rest randomly a tip or filter it by category"), /* @__PURE__ */ React.createElement("h5", {
+    className: "font-bold text-2xl mt-6"
+  }, "Statistics"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "Check the total number of requests in the last days"), /* @__PURE__ */ React.createElement("h6", {
+    className: "font-bold text-2xl mt-6"
+  }, "Privacy"), /* @__PURE__ */ React.createElement("p", {
+    className: "mt-2 font-light text-gray-800"
+  }, "You can change the assigned API Key in the developer section")), /* @__PURE__ */ React.createElement("figure", {
+    className: "flex-1"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/developer.png",
+    alt: "developer",
+    className: "max-w-full h-auto"
+  })))))), /* @__PURE__ */ React.createElement("footer", {
+    className: "mt-8 text-sm p-8 md:p-8 font-light md:flex md:justify-between"
+  }, /* @__PURE__ */ React.createElement("div", null, "\xA9", " Made for ", /* @__PURE__ */ React.createElement("a", {
+    href: "https://dev.to/devteam/announcing-the-redis-hackathon-on-dev-3248",
+    target: "_blank",
+    className: "font-bold underline"
+  }, "Redis Hackathon ")), /* @__PURE__ */ React.createElement("div", {
+    className: "flex gap-3 justify-center"
+  }, /* @__PURE__ */ React.createElement("a", {
+    href: "https://dev.to/",
+    target: "_blank",
+    className: "hover:opacity-80"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/devto.png",
+    alt: "twitter",
+    width: "32"
+  })), /* @__PURE__ */ React.createElement("a", {
+    href: "https://redis.io/",
+    target: "_blank",
+    className: "hover:opacity-80"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/redis.png",
+    alt: "twitter",
+    width: "26"
+  })), /* @__PURE__ */ React.createElement("a", {
+    href: "https://github.com/andreslopezrm/tip-land",
+    target: "_blank",
+    className: "hover:opacity-80"
+  }, /* @__PURE__ */ React.createElement("img", {
+    src: "/images/github.png",
+    alt: "github",
+    width: "24"
+  })))));
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { version: "589097b5", entry: { module: "/build/entry.client-IZWJTQY7.js", imports: ["/build/_shared/chunk-BOJHJ2SB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-BRAOKOJB.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/api/tips": { id: "routes/api/tips", parentId: "root", path: "api/tips", index: void 0, caseSensitive: void 0, module: "/build/routes/api/tips-WNGDHI5F.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-XICUXJ4O.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-I47E7HAJ.js", imports: ["/build/_shared/chunk-NUPH6IQX.js", "/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-OXIVMOQ2.js", imports: ["/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-2TMKXMKH.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-Y5MIICPF.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-BUXQ5OG4.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-BZO5PSYM.js", imports: ["/build/_shared/chunk-NUPH6IQX.js", "/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-S4AZZOJI.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-HQU7QUII.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-LEI64YOW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-589097B5.js" };
+var assets_manifest_default = { version: "3ece1050", entry: { module: "/build/entry.client-IZWJTQY7.js", imports: ["/build/_shared/chunk-BOJHJ2SB.js", "/build/_shared/chunk-SPRLBSB7.js"] }, routes: { root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-M2QGY5XY.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !0, hasErrorBoundary: !1 }, "routes/about": { id: "routes/about", parentId: "root", path: "about", index: void 0, caseSensitive: void 0, module: "/build/routes/about-BFAFM3YE.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/api/tips": { id: "routes/api/tips", parentId: "root", path: "api/tips", index: void 0, caseSensitive: void 0, module: "/build/routes/api/tips-WNGDHI5F.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard": { id: "routes/dashboard", parentId: "root", path: "dashboard", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard-XICUXJ4O.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/categories": { id: "routes/dashboard/categories", parentId: "routes/dashboard", path: "categories", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/categories-I47E7HAJ.js", imports: ["/build/_shared/chunk-NUPH6IQX.js", "/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/developer": { id: "routes/dashboard/developer", parentId: "routes/dashboard", path: "developer", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/developer-OXIVMOQ2.js", imports: ["/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/index": { id: "routes/dashboard/index", parentId: "routes/dashboard", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/dashboard/index-2TMKXMKH.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/perfil": { id: "routes/dashboard/perfil", parentId: "routes/dashboard", path: "perfil", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/perfil-Y5MIICPF.js", imports: ["/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/stats": { id: "routes/dashboard/stats", parentId: "routes/dashboard", path: "stats", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/stats-BUXQ5OG4.js", imports: ["/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/dashboard/tips": { id: "routes/dashboard/tips", parentId: "routes/dashboard", path: "tips", index: void 0, caseSensitive: void 0, module: "/build/routes/dashboard/tips-BZO5PSYM.js", imports: ["/build/_shared/chunk-NUPH6IQX.js", "/build/_shared/chunk-BQD37SUP.js", "/build/_shared/chunk-TNUSZ5ZZ.js", "/build/_shared/chunk-LOWEPNLN.js", "/build/_shared/chunk-AM76S2GN.js"], hasAction: !0, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/index": { id: "routes/index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/index-DDVHSZDA.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-in/$": { id: "routes/sign-in/$", parentId: "root", path: "sign-in/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-in/$-HQU7QUII.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/sign-up/$": { id: "routes/sign-up/$", parentId: "root", path: "sign-up/*", index: void 0, caseSensitive: void 0, module: "/build/routes/sign-up/$-LEI64YOW.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, url: "/build/manifest-3ECE1050.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
@@ -1361,6 +1477,14 @@ var assetsBuildDirectory = "public/build", publicPath = "/build/", entry = { mod
     index: void 0,
     caseSensitive: void 0,
     module: tips_exports2
+  },
+  "routes/about": {
+    id: "routes/about",
+    parentId: "root",
+    path: "about",
+    index: void 0,
+    caseSensitive: void 0,
+    module: about_exports
   },
   "routes/index": {
     id: "routes/index",

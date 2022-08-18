@@ -1411,10 +1411,6 @@ video {
     width: 75%;
   }
 
-  .md\:justify-between {
-    justify-content: space-between;
-  }
-
   .md\:gap-2 {
     gap: 0.5rem;
   }
