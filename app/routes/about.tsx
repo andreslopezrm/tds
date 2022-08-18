@@ -18,6 +18,31 @@ export default function AboutRoute() {
                     <Link className="bg-black text-white rounded px-4 py-2 border border-solid border-black hover:bg-white hover:text-black" to="sign-up">Sign Up</Link>
                 </div>
             </nav>
+
+            <div className="container m-0 mx-auto font-light mt-24">
+                <div className="px-8">
+                    <h1 className="mt-12 text-3xl mb-8 font-extrabold">About</h1>
+
+                    <p>-</p>
+                    
+                    <h2 className="mt-4 text-2xl mb-2 font-bold">Made for</h2>
+                    This project is made specifically for the <a target="_blank" href="https://dev.to/devteam/announcing-the-redis-hackathon-on-dev-3248" className="underline">Dev.to Redis Hackathon</a>
+
+                    <p className="mt-4 font-bold">Link article</p>
+                    <a className="underline" href="-" target="_blank"></a>
+
+                    <h2 className="mt-4 text-2xl mb-2 font-bold">Tech Stack</h2>
+                    <ol className="list-decimal ml-4">
+                        <li> <a className="underline" target="_blank" href="https://redis.io/">Redis </a>— The main database</li>
+                        <li> <a className="underline" target="_blank" href="https://redis.com/try-free/">Redis Cloud </a>— The platform for Redis</li>
+                        <li> <a className="underline" target="_blank" href="https://github.com/redis/redis-om-node">Redis OM for Node </a>— The object mapping for Redis</li>
+                        <li> <a className="underline" target="_blank" href="https://remix.run/">Remix </a>— The web framewok</li>
+                        <li> <a className="underline" target="_blank" href="https://vercel.com/">Vercel </a>— For deploy</li>
+                        <li> <a className="underline" target="_blank" href="https://clerk.dev/">Clerk </a>- For the Auth</li>
+                        <li> <a className="underline" target="_blank" href="https://tailwindcss.com/">Tailwind </a>— The css framework</li>
+                    </ol>
+                </div>
+            </div>
         </>
     );
 }
