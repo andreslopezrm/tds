@@ -33,6 +33,8 @@ export async function createStat(userId: string) {
     const createAt = now.format(FORMAT);
 
     const existToday = await repository.search()
+                        .where("userId")
+                        .equal(userId)
                         .where("createAt")
                         .equals(createAt)
                         .first();
@@ -69,13 +71,13 @@ export async function getStatsInWeek(userId: string) {
     
     const queries = dates.map(date => repository.search()
                                                 .where("userId")
-                                                .equals(userId)
+                                                .equal(userId)
                                                 .where("createAt")
-                                                .equals(date)
+                                                .equal(date)
                                                 .first()
     );
     const stats = await Promise.all(queries);
-
+    
     return dates.map(date => (
         {
             date,

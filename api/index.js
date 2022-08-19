@@ -875,12 +875,12 @@ async function getStatRepository() {
   return await repository.createIndex(), repository;
 }
 async function createStat(userId) {
-  let repository = await getStatRepository(), createAt = (0, import_dayjs.default)().format(FORMAT), existToday = await repository.search().where("createAt").equals(createAt).first();
+  let repository = await getStatRepository(), createAt = (0, import_dayjs.default)().format(FORMAT), existToday = await repository.search().where("userId").equal(userId).where("createAt").equals(createAt).first();
   return existToday ? (existToday.count = existToday.count === void 0 || existToday.count === null ? 0 : existToday.count + 1, repository.save(existToday), existToday) : await repository.createAndSave({ userId, createAt, count: 1 });
 }
 async function getStatsInWeek(userId) {
-  let repository = await getStatRepository(), now = (0, import_dayjs.default)(), oneDaysAgo = now.subtract(1, "day"), twoDaysAgo = now.subtract(2, "day"), threeDaysAgo = now.subtract(3, "day"), fourDaysAgo = now.subtract(4, "day"), fiveDaysAgo = now.subtract(5, "day"), nowFormat = now.format(FORMAT), oneDaysAgoFormat = oneDaysAgo.format(FORMAT), twoDaysAgoFormat = twoDaysAgo.format(FORMAT), threeDaysAgoFormat = threeDaysAgo.format(FORMAT), fourDaysAgoFormat = fourDaysAgo.format(FORMAT), fiveDaysAgoFormat = fiveDaysAgo.format(FORMAT), dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat, threeDaysAgoFormat, fourDaysAgoFormat, fiveDaysAgoFormat].reverse(), queries = dates.map((date) => repository.search().where("userId").equals(userId).where("createAt").equals(date).first()), stats = await Promise.all(queries);
-  return dates.map((date) => {
+  let repository = await getStatRepository(), now = (0, import_dayjs.default)(), oneDaysAgo = now.subtract(1, "day"), twoDaysAgo = now.subtract(2, "day"), threeDaysAgo = now.subtract(3, "day"), fourDaysAgo = now.subtract(4, "day"), fiveDaysAgo = now.subtract(5, "day"), nowFormat = now.format(FORMAT), oneDaysAgoFormat = oneDaysAgo.format(FORMAT), twoDaysAgoFormat = twoDaysAgo.format(FORMAT), threeDaysAgoFormat = threeDaysAgo.format(FORMAT), fourDaysAgoFormat = fourDaysAgo.format(FORMAT), fiveDaysAgoFormat = fiveDaysAgo.format(FORMAT), dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat, threeDaysAgoFormat, fourDaysAgoFormat, fiveDaysAgoFormat].reverse(), queries = dates.map((date) => repository.search().where("userId").equal(userId).where("createAt").equal(date).first()), stats = await Promise.all(queries);
+  return console.log({ stats, userId }), dates.map((date) => {
     var _a;
     return {
       date,
