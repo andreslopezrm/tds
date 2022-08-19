@@ -128,3 +128,11 @@ export async function deleteCategory(entityId: string): Promise<void> {
     const repository = await getCategoryRepository();
     await repository.remove(entityId);
 }
+
+export async function getTotalCategoriesByUser(userId: string): Promise<number> {
+    const repository = await getCategoryRepository();
+    return repository.search()
+                    .where("userId")
+                    .equals(userId)
+                    .count();
+}

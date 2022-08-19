@@ -17,8 +17,6 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function DashboardRoute() {
-
-
     return (
         <main>
             <div className="flex min-h-screen">

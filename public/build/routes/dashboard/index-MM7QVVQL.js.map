@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/dashboard/index.tsx?browser", "../../../../app/routes/dashboard/index.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/dashboard/index.tsx\";", "import DashHeader from \"~/components/dash-header\";\n\nexport default function DashboardIndexRoute(){\n    return (\n        <div>\n            <DashHeader title=\"Home\" />\n            <div className=\"mt-8\">\n\n            </div>\n        </div>\n    )\n}"],
+  "mappings": ";;;;;;;;;;;AAAA;;;ACAA;AAEe,+BAA8B;AACzC,SACI,oCAAC,OAAD,MACI,oCAAC,YAAD;AAAA,IAAY,OAAM;AAAA,MAClB,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA;AAAA;",
+  "names": []
+}

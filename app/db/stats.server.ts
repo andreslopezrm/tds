@@ -83,3 +83,18 @@ export async function getStatsInWeek(userId: string) {
         }
     ));
 }
+
+export async function getStatsToday(userId: string): Promise<number> {
+    const repository = await getStatRepository();
+
+    const now = dayjs();
+    const nowFormat = now.format(FORMAT);
+
+    const stat = await repository.search()
+                    .where("userId")
+                    .equals(userId)
+                    .where("createAt")
+                    .equals(nowFormat)
+                    .first();
+    return stat?.count ?? 0;
+}

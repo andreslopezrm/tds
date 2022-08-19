@@ -133,3 +133,11 @@ export async function getRamdomTip({ userId, categorySlug }: { userId: string, c
     const tips = await getAllTipsByUser(userId);
     return getRamdomItemFromArray(tips);
 }
+
+export async function getTotalTipsByUser(userId: string): Promise<number> {
+    const repository = await getTipRepository();
+    return repository.search()
+                    .where("userId")
+                    .equals(userId)
+                    .count();
+}
