@@ -39,7 +39,6 @@ export async function createStat(userId: string) {
                         .equals(createAt)
                         .first();
     
-
     if(existToday) {
         existToday.count = (existToday.count === undefined || existToday.count === null) ? 0 : existToday.count + 1;
         repository.save(existToday);
@@ -77,7 +76,7 @@ export async function getStatsInWeek(userId: string) {
                                                 .first()
     );
     const stats = await Promise.all(queries);
-    
+
     return dates.map(date => (
         {
             date,

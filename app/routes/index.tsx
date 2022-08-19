@@ -33,7 +33,7 @@ export default function IndexRoute() {
         </nav>
         <div className="container m-0 mx-auto p-8 md:p-8">
           <div className="mt-14 md:mt-24">
-            <h1 className="text-6xl text-zinc-900 font-extrabold md:text-8xl"><span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-500">Tip Land</span> the SaaS platform for the Tip of the day</h1>
+            <h1 className="text-6xl text-zinc-900 font-extrabold md:text-8xl"><span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 to-teal-500">Tip Land</span> the SaaS platform for the tip of the day</h1>
             <p className="mt-8 text-2xl text-gray-700 font-extralight md:text-3xl md:w-9/12 md:mt-12">The easy integration platform to offer users the advice that will help them to better use your product.</p>
             <section className="mt-12">
               <div className="mt-8 flex gap-4">

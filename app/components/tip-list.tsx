@@ -25,7 +25,16 @@ export default function TipList({ tips, onSelect, onDelete }: Props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {tips.map(tip => <TipItem tip={tip} key={tip.entityId} onSelect={onSelect} onDelete={onDelete} />)}
+                    { tips.length > 0 
+                        ? tips.map(tip => <TipItem tip={tip} key={tip.entityId} onSelect={onSelect} onDelete={onDelete} />) 
+                        : (
+                            <tr>
+                                <td colSpan={3}>
+                                    <p className="mt-3 text-center">Empty</p>
+                                </td>
+                            </tr>
+                          )
+                    }
                 </tbody>
             </table>
         </div>

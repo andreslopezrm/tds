@@ -25,7 +25,17 @@ export default function CategoryList({ categories, onSelect, onDelete }: Props) 
                     </tr>
                 </thead>
                 <tbody>
-                    {categories.map(category => <CategoryItem category={category} key={category.entityId} onSelect={onSelect} onDelete={onDelete} />)}
+                    {
+                        categories.length > 0 
+                            ? categories.map(category => <CategoryItem category={category} key={category.entityId} onSelect={onSelect} onDelete={onDelete} />) 
+                            : (
+                                <tr>
+                                    <td colSpan={3}>
+                                        <p className="mt-3 text-center">Empty</p>
+                                    </td>
+                                </tr>
+                              )
+                    }
                 </tbody>
             </table>
         </div>

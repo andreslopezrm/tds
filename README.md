@@ -1,8 +1,27 @@
-# [Insert your hackathon title or the app's title (keep it short)]
+# Tip Land the SaaS platform for the tip of the day
 
-[Insert description of app]
+Tip Land is a platform as a service for product creators and that can easily integrate the functionality of the tip of the day.
 
-[Insert app screenshots](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#uploading-assets)
+Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.
+
+## Social Login
+<img src="public/images/login.png" width="550" alt="Social Login">
+
+## Dashboard
+<img src="public/images/dashboard.png" width="550" alt="Dashboard">
+
+## Categories
+<img src="public/images/categories.png" width="550" alt="Categories">
+
+## Tips
+<img src="public/images/tiplist.png" width="550" alt="Tips">
+
+## API Key
+<img src="public/images/tiplist.png" width="550" alt="API Key">
+
+## Stats
+<img src="public/images/stats.png" width="550" alt="Stats">
+
 
 # Overview video (Optional)
 
@@ -22,9 +41,6 @@ Refer to [this example](https://github.com/redis-developer/basic-analytics-dashb
 
 Refer to [this example](https://github.com/redis-developer/basic-analytics-dashboard-redis-bitmaps-nodejs#how-the-data-is-accessed) for a more detailed example of what you need for this section.
 
-### Performance Benchmarks
-
-[If you migrated an existing app to use Redis, please put performance benchmarks here to show the performance improvements.]
 
 ## How to run it locally?
 
@@ -42,21 +58,9 @@ Refer to [this example](https://github.com/redis-developer/basic-analytics-dashb
 
 To make deploys work, you need to create free account on [Redis Cloud](https://redis.info/try-free-dev-to)
 
-### Google Cloud Run
-
-[Insert Run on Google button](https://cloud.google.com/blog/products/serverless/introducing-cloud-run-button-click-to-deploy-your-git-repos-to-google-cloud)
-
-### Heroku
-
-[Insert Deploy on Heroku button](https://devcenter.heroku.com/articles/heroku-button)
-
-### Netlify
-
-[Insert Deploy on Netlify button](https://www.netlify.com/blog/2016/11/29/introducing-the-deploy-to-netlify-button/)
-
 ### Vercel
 
-[Insert Deploy on Vercel button](https://vercel.com/docs/deploy-button)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fandreslopezrm%2Ftip-land&env=REDIS_URL,CLERK_FRONTEND_API,CLERK_API_KEY,CLERK_JWT_KEY&envDescription=Create%20an%20acount%20in%20Redis%20Cloud%20and%20Clerk%20Dev&project-name=remix-redis-cloud-project&repo-name=remix-redis-cloud)
 
 ## More Information about Redis Stack
 

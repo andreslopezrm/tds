@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/sign-in/$.tsx?browser", "../../../../app/routes/sign-in/$.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/sign-in/$.tsx\";", "import { SignIn } from \"@clerk/remix\";\n\nexport default function SignInRoute() {\n  return (\n    <main className=\"auth flex justify-center p-2 md:p-8\">\n       <div className=\"mt-2\">\n            <div className=\"flex items-center justify-center mb-4 md:gap-2\">\n                <img src=\"/images/forest.png\" alt=\"logo\" width=\"35\" />\n                <h1 className=\"uppercase font-extrabold text-2xl md:block\">Tip Land</h1>\n            </div>\n          <SignIn routing={\"path\"} path={\"/sign-in\"} />\n       </div>\n    </main>\n  );\n}\n\n"],
+  "mappings": ";;;;;;;;;;;AAAA;;;ACAA;AAAA,mBAAuB;AAER,uBAAuB;AACpC,SACE,oCAAC,QAAD;AAAA,IAAM,WAAU;AAAA,KACb,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACV,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACX,oCAAC,OAAD;AAAA,IAAK,KAAI;AAAA,IAAqB,KAAI;AAAA,IAAO,OAAM;AAAA,MAC/C,oCAAC,MAAD;AAAA,IAAI,WAAU;AAAA,KAA6C,cAEjE,oCAAC,qBAAD;AAAA,IAAQ,SAAS;AAAA,IAAQ,MAAM;AAAA;AAAA;",
+  "names": []
+}

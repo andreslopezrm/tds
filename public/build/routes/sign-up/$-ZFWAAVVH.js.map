@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:routes/sign-up/$.tsx?browser", "../../../../app/routes/sign-up/$.tsx"],
+  "sourcesContent": ["export { default } from \"./routes/sign-up/$.tsx\";", "import { SignUp } from \"@clerk/remix\";\nimport { Link } from \"@remix-run/react\";\n\n\nexport default function SignUpRoute() {\n  return (\n    <main className=\"auth flex justify-center p-2 md:p-8\">\n        <div className=\"mt-4\">\n          <div className=\"flex items-center justify-center mb-5 md:gap-2\">\n            <Link to=\"/\">\n              <img src=\"/images/forest.png\" alt=\"logo\" width=\"35\" />\n            </Link>\n            <h1 className=\"uppercase font-extrabold text-2xl md:block\">\n              <Link to=\"/\">Tip Land</Link>\n            </h1>\n          </div>\n          <SignUp routing={\"path\"} path={\"/sign-up\"} />\n      </div>\n    </main>\n  );\n}"],
+  "mappings": ";;;;;;;;;;;;;;AAAA;;;ACAA;AAAA,mBAAuB;AACvB;AAGe,uBAAuB;AACpC,SACE,oCAAC,QAAD;AAAA,IAAM,WAAU;AAAA,KACZ,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACb,oCAAC,OAAD;AAAA,IAAK,WAAU;AAAA,KACb,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KACP,oCAAC,OAAD;AAAA,IAAK,KAAI;AAAA,IAAqB,KAAI;AAAA,IAAO,OAAM;AAAA,OAEjD,oCAAC,MAAD;AAAA,IAAI,WAAU;AAAA,KACZ,oCAAC,MAAD;AAAA,IAAM,IAAG;AAAA,KAAI,eAGjB,oCAAC,qBAAD;AAAA,IAAQ,SAAS;AAAA,IAAQ,MAAM;AAAA;AAAA;",
+  "names": []
+}

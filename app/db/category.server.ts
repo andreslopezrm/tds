@@ -46,7 +46,7 @@ async function getCategorySlug({ userId, name } : CategoryCreate): Promise<strin
     return `${slug}-${+new Date()}`;
    }
 
-   return slug;
+   return slug.toLowerCase();
 }
 
 export async function createCategory({ userId, name } : CategoryCreate) : Promise<Category> {

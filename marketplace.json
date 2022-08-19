@@ -1,0 +1,28 @@
+{
+    "app_name": "Remix Redis Stack",
+    "description": "Showcases how to impliment Redis-OM with Remix, Tailwind and Typescript",
+    "hidden": false,
+    "rank": 21,
+    "type": "Full App",
+    "contributed_by": "Community",
+    "repo_url": "https://github.com/andreslopezrm/tip-land",
+    "download_url": "https://github.com/andreslopezrm/tip-land/archive/main.zip",
+    "hosted_url": "https://tip-land.vercel.app",
+    "quick_deploy": "true",
+    "deploy_buttons": [
+        {
+            "vercel": "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fandreslopezrm%2Ftip-land&env=REDIS_URL,CLERK_FRONTEND_API,CLERK_API_KEY,CLERK_JWT_KEY&envDescription=Create%20an%20acount%20in%20Redis%20Cloud%20and%20Clerk%20Dev&project-name=remix-redis-cloud-project&repo-name=remix-redis-cloud "
+        }
+    ],
+    "language": ["Typescript"],
+    "redis_commands": [],
+    "redis_features": [],
+    "redis_modules": ["RediJSON"],
+    "app_image_urls": [
+        ""
+    ],
+    "youtube_url": "",
+    "special_tags": ["Hackathon"],
+    "verticals": ["Technology"],  
+    "markdown": "https://github.com/andreslopezrm/tip-land/blob/main/README.md"
+}
