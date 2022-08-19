@@ -1,9 +1,21 @@
 import { getTotalCategoriesByUser } from "./category.server";
 import { getStatsToday } from "./stats.server";
-import { getAllTipsByUserPaging, getTotalTipsByUser } from "./tip.server";
+import { getAllTipsByUserPaging, getTotalTipsByUser, Tip } from "./tip.server";
 
-export async function getTotalDashboard(userId: string) {
-    const [totalCategories, totalTips, totalStats, lastTips] = await Promise.all([
+export type DashboardTotals = {
+    totalCategories: number;
+    totalTips: number;
+    totalStats: number;
+    lastTips: Tip[];
+}
+
+export async function getTotalDashboard(userId: string): Promise<DashboardTotals> {
+    const [
+        totalCategories, 
+        totalTips, 
+        totalStats, 
+        lastTips
+    ] = await Promise.all([
         getTotalCategoriesByUser(userId),
         getTotalTipsByUser(userId),
         getStatsToday(userId),

@@ -1,6 +1,6 @@
 import { Entity, Repository, Schema } from "redis-om";
-import { redisClient, redisConnect } from "./redis.server";
 import dayjs from "dayjs";
+import { redisClient, redisConnect } from "./redis.server";
 
 const FORMAT = "DD-MM-YYYY";
 

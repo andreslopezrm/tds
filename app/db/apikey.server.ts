@@ -1,5 +1,5 @@
 import { Entity, Repository, Schema } from "redis-om";
-import { uuid } from 'uuidv4';
+import { uuid } from "uuidv4";
 import { redisClient, redisConnect } from "./redis.server";
 
 export interface ApiKey {
