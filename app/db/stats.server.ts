@@ -67,27 +67,19 @@ export async function getStatsInWeek(userId: string) {
 
     const dates = [nowFormat, oneDaysAgoFormat, twoDaysAgoFormat, threeDaysAgoFormat, fourDaysAgoFormat, fiveDaysAgoFormat].reverse();
     
-    const stats = await repository.search()
-                    .where("userId")
-                    .equals(userId)
-                    .where("createAt")
-                    .equal(nowFormat)
-                    .or("createAt")
-                    .equals(oneDaysAgoFormat)
-                    .or("createAt")
-                    .equals(twoDaysAgoFormat)
-                    .or("createAt")
-                    .equals(threeDaysAgoFormat)
-                    .or("createAt")
-                    .equals(fourDaysAgoFormat)
-                    .or("createAt")
-                    .equals(fiveDaysAgoFormat)
-                    .all();
+    const queries = dates.map(date => repository.search()
+                                                .where("userId")
+                                                .equals(userId)
+                                                .where("createAt")
+                                                .equals(date)
+                                                .first()
+    );
+    const stats = await Promise.all(queries);
 
     return dates.map(date => (
         {
             date,
-            count: stats.find(stat => stat.createAt == date)?.count ?? 0
+            count: stats.find(stat => stat?.createAt == date)?.count ?? 0
         }
     ));
 }

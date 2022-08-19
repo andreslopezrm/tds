@@ -1,8 +1,9 @@
 import { getAuth } from "@clerk/remix/ssr.server";
 import { json, LoaderArgs, redirect } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import DashNavbar from "~/components/dash-navbar";
 import { checkUser } from "~/db/user.server";
+import { getClerkUser } from "~/utils/clerk";
 
 export async function loader({ request }: LoaderArgs) {
     const { userId } = await getAuth(request);
@@ -16,6 +17,8 @@ export async function loader({ request }: LoaderArgs) {
 }
 
 export default function DashboardRoute() {
+
+
     return (
         <main>
             <div className="flex min-h-screen">

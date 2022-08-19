@@ -1,4 +1,5 @@
 import { Entity, Schema } from "redis-om";
+import { getProviderClerkUser } from "~/utils/clerk";
 import { createApiKey } from "./apikey.server";
 import { createCategory } from "./category.server";
 import { redisClient, redisConnect } from "./redis.server";
@@ -29,9 +30,12 @@ export async function checkUser(userId: string) {
                         .first();
 
     if(!user) {
+        const provider = await getProviderClerkUser(userId);
+
         await repository.createAndSave({
             clerkId: userId,
             active: true,
+            provider,
             createAt: new Date()
         });
 
