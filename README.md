@@ -4,23 +4,32 @@ Tip Land is a platform as a service for product creators and that can easily int
 
 Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.
 
-## Social Login
+**Social Login**
 <img src="public/images/login.png" width="550" alt="Social Login">
 
-## Dashboard
+**Dashboard**
 <img src="public/images/dashboard.png" width="550" alt="Dashboard">
 
-## Categories
+**Categories**
 <img src="public/images/categories.png" width="550" alt="Categories">
 
-## Tips
+**Tips**
 <img src="public/images/tiplist.png" width="550" alt="Tips">
 
-## API Key
+**API Key**
 <img src="public/images/tiplist.png" width="550" alt="API Key">
 
-## Stats
+**Stats**
 <img src="public/images/stats.png" width="550" alt="Stats">
+
+# Arquitecture
+
+**Stack**
+<img src="public/images/stack.png" width="550" alt="Stack">
+
+
+**Database**
+<img src="public/images/database.png" width="550" alt="Database">
 
 
 # Overview video (Optional)
