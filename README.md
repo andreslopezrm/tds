@@ -5,67 +5,207 @@ Tip Land is a platform as a service for product creators and that can easily int
 Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.
 
 **Social Login**
-<img src="public/images/login.png" width="550" alt="Social Login">
+![Social Login](https://tip-land.vercel.app/images/login.png)
 
 **Dashboard**
-<img src="public/images/dashboard.png" width="550" alt="Dashboard">
-
-**Categories**
-<img src="public/images/categories.png" width="550" alt="Categories">
+![Dashboard](https://tip-land.vercel.app/images/dashboard.png)
 
 **Tips**
-<img src="public/images/tiplist.png" width="550" alt="Tips">
+![Tips](https://tip-land.vercel.app/images/tiplist.png)
 
 **API Key**
-<img src="public/images/tiplist.png" width="550" alt="API Key">
+![Api Key](https://tip-land.vercel.app/images/apikey.png)
 
 **Stats**
-<img src="public/images/stats.png" width="550" alt="Stats">
-
-# Arquitecture
-
-**Stack**
-<img src="public/images/stack.png" width="550" alt="Stack">
+![Stats](https://tip-land.vercel.app/images/stats.png)
 
 
-**Database**
-<img src="public/images/database.png" width="550" alt="Database">
-
-
-# Overview video (Optional)
-
-Here's a short video that explains the project and how it uses Redis:
-
-[Insert your own video here, and remove the one below]
+# Overview video
 
 [![Embed your YouTube video](https://i.ytimg.com/vi/vyxdC1qK4NE/maxresdefault.jpg)](https://www.youtube.com/watch?v=vyxdC1qK4NE)
 
 ## How it works
 
+
+![Stack](https://tip-land.vercel.app/images/stack.png)
+**Stack**
+
+
 ### How the data is stored:
 
-Refer to [this example](https://github.com/redis-developer/basic-analytics-dashboard-redis-bitmaps-nodejs#how-the-data-is-stored) for a more detailed example of what you need for this section.
+![Database](https://tip-land.vercel.app/images/database.png)
+**Database**
+
+The project manages persistence through the [Redis OM for Node.js](https://github.com/redis/redis-om-node), for the tips of the day we have the following properties
+
+Tip
+
+- description: string
+- categoryId: string
+- userId: string
+- createAt: Date
+
+To start data management with Redis, a function is performed that creates a client that receives the connection url from the environment variables.
+
+```javascript
+import { Client } from "redis-om";
+
+const redisClient = new Client();
+
+async function redisConnect () {
+    if (!redisClient.isOpen()) {
+      await redisClient.open(process.env.REDIS_URL);
+    }
+};
+
+export { redisClient, redisConnect };
+```
+
+Once having the connection, the Tip class is created, with its interface to define its attributes in Typescript and the schema
+
+```typescript
+export interface Tip {
+    description: string;
+    categoryId: string;
+    userId: string;
+    createAt: Date;
+    category?: Category
+}
+
+export class Tip extends Entity {}
+
+const tipSchema = new Schema(Tip, {
+    description: { type: "string" },
+    categoryId: { type: "string", indexed: true },
+    userId: { type: "string", indexed: true },
+    createAt: { type: "date", sortable: true }
+});
+```
+
+Through generating a repository is where the connection between the client and the schema is made
+
+```typescript
+async function getTipRepository(): Promise<Repository<Tip>> {
+    await redisConnect();
+    const repository = redisClient.fetchRepository(tipSchema);
+  
+    await repository.createIndex();
+    return repository;
+}
+```
+
+The createTip function generates a tip entity based on the user's identifier
+```typescript
+export async function createTip({ userId, description, categoryId } : TipCreate) : Promise<Tip> {
+    const repository = await getTipRepository();
+    return repository.createAndSave({ userId, description, categoryId, createAt: new Date() });
+}
+```
+
+On the user interface side through the action function defined in Remix is where the form information is obtained and the createTip function is called
+
+```typescript
+export async function action({ request }: ActionArgs) {
+    const { userId } = await getAuth(request);
+
+    if(!userId) {
+        return redirect("/sign-up");
+    }
+
+    const formData = await request.formData();
+    const intent = formData.get("intent") as IntentType; 
+    
+    if(intent === "create") {
+        const description = formData.get("description") as string;
+        const categoryId = formData.get("categoryId") as string;
+
+        const tip = await createTip({ userId, categoryId, description });
+        return json({ intent, tip });
+    } 
+    
+}
+```
 
 ### How the data is accessed:
 
-Refer to [this example](https://github.com/redis-developer/basic-analytics-dashboard-redis-bitmaps-nodejs#how-the-data-is-accessed) for a more detailed example of what you need for this section.
+Through the getAllTipsByUserPaging function, the user identifier, the offset, and the elements that are consulted in total in the paging are received
 
+```typescript
+export async function getAllTipsByUserPaging({ userId, offset = 0, perPage = 1}: TipSearch): Promise<Tip[]> {
+    const repository = await getTipRepository();
 
+    return repository.search()
+            .where("userId")
+            .equals(userId)
+            .sortDescending("createAt")
+            .return
+            .page(offset, perPage);
+}
+```
+
+On the user interface side, Remix determines that the loader function is in charge of calling the functions that access the data.
+
+```typescript
+export async function loader({ request }: LoaderArgs) {
+    const { userId } = await getAuth(request);
+    
+    if(!userId) {
+        return redirect("/sign-up");
+    }
+    const offset = getQueryIntParameter(request, "offset", 0);
+    const perPage = getQueryIntParameter(request, "per_page", 200); 
+
+    const [total, plainTips, categories] = await Promise.all([ 
+        countAllTipsByUser(userId), 
+        getAllTipsByUserPaging({ userId, offset, perPage }), 
+        getAllCategoriesByUser(userId) 
+    ]);
+
+    const tips = getTipsWithCategory({ tips: plainTips, categories });
+    return json({ total, tips, categories, offset, perPage });
+}
+```
 ## How to run it locally?
-
-[Make sure you test this with a fresh clone of your repo, these instructions will be used to judge your app.]
 
 ### Prerequisites
 
-[Fill out with any prerequisites (e.g. Node, Docker, etc.). Specify minimum versions]
+- Node >= v14.0.0
+- Redis Cloud account
+- Clerk dev account
 
 ### Local installation
 
-[Insert instructions for local installation]
+Create an .env file with the environment variables shown in the env.example file
+
+```
+REDIS_URL=
+
+CLERK_FRONTEND_API=
+
+CLERK_API_KEY=
+
+CLERK_JWT_KEY=
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+
+Run development mode
+
+```bash
+npm run dev
+```
+
 
 ## Deployment
 
 To make deploys work, you need to create free account on [Redis Cloud](https://redis.info/try-free-dev-to)
+
+Also the [Clerk](https://clerk.dev/) for handling authentication.
 
 ### Vercel
 
