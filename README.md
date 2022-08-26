@@ -4,6 +4,12 @@ Tip Land is a platform as a service for product creators and that can easily int
 
 Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.
 
+Made with **Re2 Stack** (_Remix + Redis = Re2 Stack_)
+
+When two blazing-fast technologies come together to bring out the best of each other, something amazing happens:
+
+> In Remix the global state is the database and the database is the cache in Redis Stack.
+
 **Social Login**
 ![Social Login](https://tip-land.vercel.app/images/login.png)
 
@@ -22,7 +28,7 @@ Many products today include daily tips for their best use in their interface, su
 
 # Overview video
 
-[![Embed your YouTube video](https://i.ytimg.com/vi/vyxdC1qK4NE/maxresdefault.jpg)](https://www.youtube.com/watch?v=vyxdC1qK4NE)
+[![Embed your YouTube video](https://i.ytimg.com/vi/yhhfZTNStGw/maxresdefault.jpg)](https://youtu.be/yhhfZTNStGw)
 
 ## How it works
 

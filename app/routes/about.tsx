@@ -23,13 +23,16 @@ export default function AboutRoute() {
                 <div className="px-8">
                     <h1 className="mt-12 text-3xl mb-8 font-extrabold">About</h1>
 
-                    <p>-</p>
+                    <p>Tip Land is a platform as a service for product creators and that can easily integrate the functionality of the tip of the day.</p>
+
+                    <p>Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.</p>
                     
                     <h2 className="mt-4 text-2xl mb-2 font-bold">Made for</h2>
                     This project is made specifically for the <a target="_blank" href="https://dev.to/devteam/announcing-the-redis-hackathon-on-dev-3248" className="underline">Dev.to Redis Hackathon</a>
 
-                    <p className="mt-4 font-bold">Link article</p>
-                    <a className="underline" href="-" target="_blank"></a>
+                    <p className="mt-4 font-bold">
+                        <a className="underline" href="https://dev.to/andreslopezrm/tip-land-the-saas-platform-for-the-tip-of-the-day-5g7n" target="_blank">Link article</a>
+                    </p>
 
                     <h2 className="mt-4 text-2xl mb-2 font-bold">Tech Stack</h2>
                     <ol className="list-decimal ml-4">
