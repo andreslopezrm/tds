@@ -25,7 +25,12 @@ export default function AboutRoute() {
 
                     <p>Tip Land is a platform as a service for product creators and that can easily integrate the functionality of the tip of the day.</p>
 
-                    <p>Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.</p>
+                    <p className="mt-4">Many products today include daily tips for their best use in their interface, such as code editors, management systems among many others, Tip Land provides you with a platform with which you can create those tips for your products, through a API Key assigned to your account you can access the endpoint.</p>
+
+                    <h2 className="mt-5">Re2 Stack 📀 🟥</h2>
+                    <p className="mt-2">
+                        <a target="_blank" href="https://dev.to/andreslopezrm/introducing-re2-stack-50l">Article about Re2 Stack</a>
+                    </p>
                     
                     <h2 className="mt-4 text-2xl mb-2 font-bold">Made for</h2>
                     This project is made specifically for the <a target="_blank" href="https://dev.to/devteam/announcing-the-redis-hackathon-on-dev-3248" className="underline">Dev.to Redis Hackathon</a>
